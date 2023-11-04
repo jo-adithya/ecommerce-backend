@@ -1,7 +1,20 @@
+import { LoggerModule as PinoLoggerModule } from "nestjs-pino";
+
 import { Module } from "@nestjs/common";
 
 @Module({
-	controllers: [],
+	imports: [
+		PinoLoggerModule.forRoot({
+			pinoHttp: {
+				transport: {
+					target: "pino-pretty",
+					options: {
+						colorize: true,
+					},
+				},
+			},
+		}),
+	],
 	providers: [],
 	exports: [],
 })
