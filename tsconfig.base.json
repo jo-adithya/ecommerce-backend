@@ -15,8 +15,8 @@
 		"skipDefaultLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"@nx-micro-ecomm/config": ["libs/server/config/src/index.ts"],
-			"@nx-micro-ecomm/database": ["libs/server/database/src/index.ts"]
+			"@nx-micro-ecomm/server/config": ["libs/server/config/src/index.ts"],
+			"@nx-micro-ecomm/server/database": ["libs/server/database/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]
