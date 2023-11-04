@@ -1,4 +1,9 @@
 {
-  "useTabs": true,
-  "printWidth": 100
+	"useTabs": true,
+	"printWidth": 100,
+	"importOrder": ["^@nestjs/(.*)$", "^@nx-micro-ecomm/server/(.*)$", "^[./]"],
+	"importOrderSeparation": true,
+	"importOrderSortSpecifiers": true,
+	"importOrderParserPlugins": ["typescript", "decorators"],
+	"plugins": ["@trivago/prettier-plugin-sort-imports"]
 }

@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
+
 import { ConfigModule } from "@nx-micro-ecomm/server/config";
 
 @Module({
