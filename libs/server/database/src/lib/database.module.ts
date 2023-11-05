@@ -18,10 +18,7 @@ import { ConfigModule } from "@nx-micro-ecomm/server/config";
 	exports: [],
 })
 export class DatabaseModule {
-  static forFeature(
-    models?: ModelDefinition[] | undefined,
-    connectionName?: string | undefined
-  ) {
-    return MongooseModule.forFeature(models, connectionName);
-  }
+	static forFeature(models?: ModelDefinition[] | undefined, connectionName?: string | undefined) {
+		return MongooseModule.forFeature(models, connectionName);
+	}
 }

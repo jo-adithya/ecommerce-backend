@@ -8,7 +8,7 @@ export class Product extends AbstractDocument {
 	title: string;
 
 	@Prop({ required: true })
-	price: string;
+	price: number;
 
 	@Prop({ required: true })
 	userId: string;
