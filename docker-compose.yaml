@@ -1,0 +1,17 @@
+services:
+  products:
+    build:
+      context: .
+      dockerfile: ./apps/products/Dockerfile
+      target: development
+    command: pnpm run start products
+    env_file:
+      - ./apps/products/.env
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  # mongo:
+  #   image: mongo
