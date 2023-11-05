@@ -16,7 +16,6 @@ import { AuthService } from "./auth.service";
 		ConfigModule,
 		UsersModule,
 		JwtModule.registerAsync({
-			imports: [ConfigModule],
 			useFactory: (configService: ConfigService) => ({
 				secret: configService.get("JWT_SECRET"),
 				signOptions: { expiresIn: `${configService.get("JWT_EXPIRATION")}s` },
@@ -29,6 +28,7 @@ import { AuthService } from "./auth.service";
 				MONGODB_URI: Joi.string().required(),
 				JWT_SECRET: Joi.string().required(),
 				JWT_EXPIRATION: Joi.number().required(),
+				PORT: Joi.number().required(),
 			}),
 		}),
 	],
