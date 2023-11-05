@@ -1,8 +1,9 @@
+import Joi from "joi";
+
 import { Module } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 
-import { ConfigModule } from "@nx-micro-ecomm/server/config";
 import { LoggerModule } from "@nx-micro-ecomm/server/logger";
 
 import { UsersModule } from "../users/users.module";
@@ -21,6 +22,14 @@ import { AuthService } from "./auth.service";
 				signOptions: { expiresIn: `${configService.get("JWT_EXPIRATION")}s` },
 			}),
 			inject: [ConfigService],
+		}),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			validationSchema: Joi.object({
+				MONGODB_URI: Joi.string().required(),
+				JWT_SECRET: Joi.string().required(),
+				JWT_EXPIRATION: Joi.number().required(),
+			}),
 		}),
 	],
 	controllers: [AuthController],
