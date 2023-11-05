@@ -31,7 +31,7 @@ export abstract class AbstractRepository<T> {
 			`Finding one and updating ${this.model.modelName}: ${JSON.stringify(filterQuery)}`,
 		);
 		const document = await this.model
-			.findOneAndUpdate(filterQuery, updateQuery)
+			.findOneAndUpdate(filterQuery, updateQuery, { new: true })
 			.select(projection)
 			.lean()
 			.exec();
@@ -49,7 +49,7 @@ export abstract class AbstractRepository<T> {
 
 	async findOneAndDelete(
 		filterQuery: FilterQuery<T>,
-		projection: ProjectionFields<T>,
+		projection: ProjectionFields<T> = {},
 	): Promise<FlattenMaps<T>> {
 		this.logger.debug(
 			`Finding one and deleting ${this.model.modelName}: ${JSON.stringify(filterQuery)}`,
