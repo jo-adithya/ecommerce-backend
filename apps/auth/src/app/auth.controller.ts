@@ -15,10 +15,10 @@ export class AuthController {
 	@UseGuards(LocalAuthGuard)
 	@Post("signin")
 	async signIn(@CurrentUser() user: User, @Res({ passthrough: true }) response: Response) {
-    const cookieOptions = { secure: true, httpOnly: true, sameSite: true };
+		const cookieOptions = { secure: true, httpOnly: true, sameSite: true };
 		const { accessToken, refreshToken } = await this.authService.signIn(user);
-    response.cookie("accessToken", accessToken, cookieOptions);
-    response.cookie("refreshToken", refreshToken, cookieOptions);
+		response.cookie("accessToken", accessToken, cookieOptions);
+		response.cookie("refreshToken", refreshToken, cookieOptions);
 		return user;
 	}
 

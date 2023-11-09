@@ -1,3 +1,3 @@
 export type TokenPayload = {
-  sub: string;
-}
+	sub: string;
+};

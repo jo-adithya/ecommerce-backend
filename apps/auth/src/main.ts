@@ -9,7 +9,7 @@ import { AuthModule } from "./app/auth.module";
 
 async function bootstrap() {
 	const app = await NestFactory.create(AuthModule);
-  app.use(cookieParser.default());
+	app.use(cookieParser.default());
 	const globalPrefix = "api";
 	app.setGlobalPrefix(globalPrefix);
 	app.useGlobalPipes(new ValidationPipe());
