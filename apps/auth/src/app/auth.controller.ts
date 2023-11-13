@@ -29,9 +29,4 @@ export class AuthController {
 	async signUp(@Body() createUserDto: CreateUserDto) {
 		return this.authService.signUp(createUserDto);
 	}
-
-	@Get()
-	getData() {
-		return this.authService.getData();
-	}
 }
