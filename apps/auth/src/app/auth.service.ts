@@ -21,10 +21,6 @@ export class AuthService {
 		@Inject(jwtConfig.KEY) private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
 	) {}
 
-	getData(): { message: string } {
-		return { message: "Hello API" };
-	}
-
 	async signUp(createUserDto: CreateUserDto) {
 		return this.usersService.create({
 			...createUserDto,
