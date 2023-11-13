@@ -1,7 +1,9 @@
+import cookieParser from "cookie-parser";
 import Joi from "joi";
 
-import { Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { MiddlewareConsumer, Module, ValidationPipe } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { APP_PIPE } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 
 import { jwtConfig } from "@nx-micro-ecomm/server/config";
@@ -43,6 +45,14 @@ import { AuthService } from "./auth.service";
 			provide: HashingService,
 			useClass: ScryptService,
 		},
+		{
+			provide: APP_PIPE,
+			useValue: new ValidationPipe({ whitelist: true }),
+		},
 	],
 })
-export class AuthModule {}
+export class AuthModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(cookieParser()).forRoutes("*");
+	}
+}
