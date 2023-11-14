@@ -1,0 +1,43 @@
+{
+	"name": "client",
+	"$schema": "../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "apps/client",
+	"projectType": "application",
+	"tags": [],
+	"targets": {
+		"build": {
+			"executor": "@nx/remix:build",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/apps/client"
+			}
+		},
+		"serve": {
+			"executor": "@nx/remix:serve",
+			"options": {
+				"port": 4200
+			}
+		},
+		"start": {
+			"dependsOn": ["build"],
+			"command": "remix-serve build",
+			"options": {
+				"cwd": "apps/client"
+			}
+		},
+		"typecheck": {
+			"command": "tsc",
+			"options": {
+				"cwd": "apps/client"
+			}
+		},
+		"test": {
+			"executor": "@nx/vite:test",
+			"outputs": ["{options.reportsDirectory}"],
+			"options": {
+				"passWithNoTests": true,
+				"reportsDirectory": "../../coverage/apps/client"
+			}
+		}
+	}
+}
