@@ -3,7 +3,6 @@ import { Test } from "@nestjs/testing";
 
 import { CreateUserDto } from "../dtos";
 import { User } from "../models/user.schema";
-import { UsersService } from "../users/users.service";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 

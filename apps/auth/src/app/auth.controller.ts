@@ -1,6 +1,6 @@
 import { Response } from "express";
 
-import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, Res, UseGuards } from "@nestjs/common";
 
 import { Serialize } from "@nx-micro-ecomm/server/interceptors";
 
@@ -28,5 +28,12 @@ export class AuthController {
 	@Post("signup")
 	async signUp(@Body() createUserDto: CreateUserDto) {
 		return this.authService.signUp(createUserDto);
+	}
+
+	@UseGuards(LocalAuthGuard)
+	@Post("signout")
+	async signOut(@Res({ passthrough: true }) response: Response) {
+		response.clearCookie("accessToken");
+		response.clearCookie("refreshToken");
 	}
 }
