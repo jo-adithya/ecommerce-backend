@@ -9,7 +9,6 @@
 	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
-		"plugin:react/recommended",
 		"prettier"
 	],
 	"parser": "@typescript-eslint/parser",
@@ -22,19 +21,19 @@
 		{
 			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
 			"rules": {
-				// "@nx/enforce-module-boundaries": [
-				//   "error",
-				//   {
-				//     "enforceBuildableLibDependency": true,
-				//     "allow": [],
-				//     "depConstraints": [
-				//       {
-				//         "sourceTag": "*",
-				//         "onlyDependOnLibsWithTags": ["*"]
-				//       }
-				//     ]
-				//   }
-				// ]
+				"@nx/enforce-module-boundaries": [
+					"error",
+					{
+						"enforceBuildableLibDependency": true,
+						"allow": [],
+						"depConstraints": [
+							{
+								"sourceTag": "*",
+								"onlyDependOnLibsWithTags": ["*"]
+							}
+						]
+					}
+				],
 				"prettier/prettier": ["error"]
 			}
 		},
