@@ -27,5 +27,17 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
 
+  client:
+    build:
+      context: .
+      dockerfile: ./apps/client/Dockerfile
+      target: development
+    command: pnpm run start client
+    ports:
+      - '4200:4200'
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
   mongo:
     image: mongo
