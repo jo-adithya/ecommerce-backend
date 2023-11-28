@@ -1,9 +1,18 @@
 {
 	"useTabs": true,
+	"singleQuote": false,
 	"printWidth": 100,
 	"importOrder": ["^@nestjs/(.*)$", "^@nx-micro-ecomm/server/(.*)$", "^[./]"],
 	"importOrderSeparation": true,
 	"importOrderSortSpecifiers": true,
 	"importOrderParserPlugins": ["typescript", "decorators-legacy"],
-	"plugins": ["@trivago/prettier-plugin-sort-imports"]
+	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"],
+	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
+	"svelteStrictMode": false,
+	"svelteBracketNewLine": true,
+	"svelteAllowShorthand": true,
+	"svelteIndentScriptAndStyle": true,
+	"svelteSingleQuote": false,
+	"svelteSortOrder": "options-scripts-markup-styles"
 }
+

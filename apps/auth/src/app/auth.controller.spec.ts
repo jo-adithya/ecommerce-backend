@@ -34,12 +34,13 @@ describe("AuthController", () => {
 	describe("signIn", () => {
 		it("should return tokens", async () => {
 			const response = {
-				cookie: function (key: string, value: string, options: any) {
+				cookie: function (key: string, value: string) {
 					this.cookies[key] = value;
 				},
 				cookies: {},
 			};
 
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const user = await controller.signIn({ email, password } as User, response as any);
 			expect(user.email).toEqual(email);
 			expect(user.password).toEqual(password);

@@ -1,0 +1,10 @@
+{
+	"name": "client",
+	"version": "0.0.1",
+	"type": "module",
+	"main": "./src/app.html",
+	"license": "MIT",
+	"devDependencies": {
+		"svelte": "../../node_modules/svelte"
+	}
+}

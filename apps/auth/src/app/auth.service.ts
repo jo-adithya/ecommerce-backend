@@ -1,5 +1,3 @@
-import { Response } from "express";
-
 import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
@@ -9,7 +7,6 @@ import { jwtConfig } from "@nx-micro-ecomm/server/config";
 import { CreateUserDto } from "../dtos";
 import { HashingService } from "../hashing";
 import { User } from "../models/user.schema";
-import { TokenPayload } from "../types";
 import { UsersService } from "../users/users.service";
 
 @Injectable()

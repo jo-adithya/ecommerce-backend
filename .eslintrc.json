@@ -1,16 +1,12 @@
 {
 	"root": true,
 	"ignorePatterns": ["**/*"],
-	"plugins": ["@nx", "@typescript-eslint", "prettier"],
+	"plugins": ["@nx"],
 	"env": {
 		"browser": true,
 		"es2021": true
 	},
-	"extends": [
-		"eslint:recommended",
-		"plugin:@typescript-eslint/recommended",
-		"prettier"
-	],
+	"extends": ["eslint:recommended"],
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"ecmaVersion": "latest",

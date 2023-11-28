@@ -1,0 +1,56 @@
+{
+	"targets": {
+		"sync": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "svelte-kit sync",
+				"cwd": "apps/client"
+			}
+		},
+		"build": {
+			"executor": "@nx/vite:build",
+			"outputs": [
+				"{options.outputPath}"
+			],
+			"defaultConfiguration": "production",
+			"options": {
+				"outputPath": "dist/apps/client",
+				"svelteConfig": "apps/app/svelte.config.js"
+			},
+			"configurations": {
+				"development": {
+					"mode": "development"
+				},
+				"production": {
+					"mode": "production"
+				}
+			}
+		},
+		"serve": {
+			"executor": "@nx/vite:dev-server",
+			"defaultConfiguration": "development",
+			"options": {
+				"buildTarget": "client:build",
+				"svelteConfig": "apps/app/svelte.config.js"
+			},
+			"configurations": {
+				"development": {
+					"buildTarget": "client:build:development",
+					"hmr": true
+				},
+				"production": {
+					"buildTarget": "client:build:production",
+					"hmr": false
+				}
+			}
+		},
+		"lint": {
+			"executor": "@nx/eslint:lint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["apps/client/**/*.ts", "apps/client/**/*.svelte"],
+				"svelteConfig": "apps/app/svelte.config.cjs"
+			}
+		}
+	}
+}

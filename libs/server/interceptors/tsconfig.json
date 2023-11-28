@@ -10,7 +10,7 @@
 		"noFallthroughCasesInSwitch": true
 	},
 	"files": [],
-	"include": [],
+	"include": ["./.eslintrc.js"],
 	"references": [
 		{
 			"path": "./tsconfig.lib.json"

@@ -1,12 +1,12 @@
 import { Response } from "express";
 
-import { Body, Controller, Post, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
 
 import { Serialize } from "@nx-micro-ecomm/server/interceptors";
 
 import { CurrentUser } from "../decorators";
 import { CreateUserDto, UserDto } from "../dtos";
-import { LocalAuthGuard } from "../guards/local-auth.guard";
+import { JwtAuthGuard, LocalAuthGuard } from "../guards";
 import { User } from "../models/user.schema";
 import { AuthService } from "./auth.service";
 
@@ -28,6 +28,12 @@ export class AuthController {
 	@Post("signup")
 	async signUp(@Body() createUserDto: CreateUserDto) {
 		return this.authService.signUp(createUserDto);
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@Get("iam")
+	async iam(@CurrentUser() user: User) {
+		return user;
 	}
 
 	@UseGuards(LocalAuthGuard)
