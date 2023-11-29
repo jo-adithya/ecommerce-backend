@@ -1,4 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+
+import { JwtAuthGuard } from "@nx-micro-ecomm/server/auth";
 
 import { CreateProductDto } from "../dtos/create-product.dto";
 import { UpdateProductDto } from "../dtos/update-product.dto";
@@ -8,6 +10,7 @@ import { ProductsService } from "./products.service";
 export class ProductsController {
 	constructor(private readonly productsService: ProductsService) {}
 
+	@UseGuards(JwtAuthGuard)
 	@Post()
 	async create(@Body() createProductDto: CreateProductDto) {
 		return this.productsService.create(createProductDto);

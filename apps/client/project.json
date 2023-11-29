@@ -7,6 +7,13 @@
 				"cwd": "apps/client"
 			}
 		},
+		"dev": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "vite dev",
+				"cwd": "apps/client"
+			}
+		},
 		"build": {
 			"executor": "@nx/vite:build",
 			"outputs": [
@@ -15,7 +22,7 @@
 			"defaultConfiguration": "production",
 			"options": {
 				"outputPath": "dist/apps/client",
-				"svelteConfig": "apps/app/svelte.config.js"
+				"svelteConfig": "apps/client/svelte.config.js"
 			},
 			"configurations": {
 				"development": {
@@ -31,7 +38,8 @@
 			"defaultConfiguration": "development",
 			"options": {
 				"buildTarget": "client:build",
-				"svelteConfig": "apps/app/svelte.config.js"
+				"svelteConfig": "apps/client/svelte.config.js",
+				"cwd": "apps/client"
 			},
 			"configurations": {
 				"development": {

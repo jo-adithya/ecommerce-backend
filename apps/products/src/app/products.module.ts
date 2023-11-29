@@ -1,6 +1,7 @@
+import cookieParser from "cookie-parser";
 import Joi from "joi";
 
-import { Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 
 import { DatabaseModule } from "@nx-micro-ecomm/server/database";
@@ -27,4 +28,8 @@ import { ProductsService } from "./products.service";
 	controllers: [ProductsController],
 	providers: [ProductsService, ProductsRepository],
 })
-export class ProductsModule {}
+export class ProductsModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(cookieParser()).forRoutes("*");
+	}
+}

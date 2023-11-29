@@ -12,6 +12,7 @@ module.exports = {
 		".eslintrc.cjs",
 		"/.svelte-kit/types/src/routes/$types.d.ts",
 		"/.svelte-kit/ambient.d.ts",
+		"/.svelte-kit/generated/root.svelte",
 	],
 	plugins: ["@typescript-eslint", "prettier"],
 	parserOptions: {
