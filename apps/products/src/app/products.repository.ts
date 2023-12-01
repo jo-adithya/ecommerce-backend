@@ -9,8 +9,8 @@ import { Product } from "../models/product.schema";
 
 @Injectable()
 export class ProductsRepository extends AbstractRepository<Product> {
-	protected logger = new Logger(ProductsRepository.name);
-	constructor(@InjectModel(Product.name) productModel: Model<Product>) {
-		super(productModel);
-	}
+  protected logger = new Logger(ProductsRepository.name);
+  constructor(@InjectModel(Product.name) productModel: Model<Product>) {
+    super(productModel);
+  }
 }

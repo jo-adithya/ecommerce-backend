@@ -8,21 +8,21 @@ import { UsersService } from "./users.service";
 
 @Controller("users")
 export class UsersController {
-	constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
-	@Post()
-	async create(@Body() createUserDto: CreateUserDto) {
-		return this.usersService.create(createUserDto);
-	}
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
 
-	@Get()
-	async findAll() {
-		return this.usersService.findAll();
-	}
+  @Get()
+  async findAll() {
+    return this.usersService.findAll();
+  }
 
-	@Get("info")
-	@UseGuards(JwtAuthGuard)
-	async getUser(@CurrentUser() user: User) {
-		return user;
-	}
+  @Get("info")
+  @UseGuards(JwtAuthGuard)
+  async getUser(@CurrentUser() user: User) {
+    return user;
+  }
 }

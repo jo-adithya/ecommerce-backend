@@ -4,19 +4,19 @@ import { ProductsController } from "./products.controller";
 import { ProductsService } from "./products.service";
 
 describe("ProductsController", () => {
-	let app: TestingModule;
+  let app: TestingModule;
 
-	beforeAll(async () => {
-		app = await Test.createTestingModule({
-			controllers: [ProductsController],
-			providers: [ProductsService],
-		}).compile();
-	});
+  beforeAll(async () => {
+    app = await Test.createTestingModule({
+      controllers: [ProductsController],
+      providers: [ProductsService],
+    }).compile();
+  });
 
-	describe("getData", () => {
-		it('should return "Hello API"', () => {
-			const appController = app.get<ProductsController>(ProductsController);
-			expect(appController.getData()).toEqual({ message: "Hello API" });
-		});
-	});
+  describe("getData", () => {
+    it('should return "Hello API"', () => {
+      const appController = app.get<ProductsController>(ProductsController);
+      expect(appController.getData()).toEqual({ message: "Hello API" });
+    });
+  });
 });

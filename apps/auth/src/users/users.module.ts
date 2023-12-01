@@ -8,9 +8,9 @@ import { UsersRepository } from "./users.repository";
 import { UsersService } from "./users.service";
 
 @Module({
-	imports: [DatabaseModule, DatabaseModule.forFeature([{ name: User.name, schema: UserSchema }])],
-	controllers: [UsersController],
-	providers: [UsersService, UsersRepository],
-	exports: [UsersService],
+  imports: [DatabaseModule, DatabaseModule.forFeature([{ name: User.name, schema: UserSchema }])],
+  controllers: [UsersController],
+  providers: [UsersService, UsersRepository],
+  exports: [UsersService],
 })
 export class UsersModule {}

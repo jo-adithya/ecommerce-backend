@@ -13,23 +13,23 @@ import { ProductsRepository } from "./products.repository";
 import { ProductsService } from "./products.service";
 
 @Module({
-	imports: [
-		LoggerModule,
-		DatabaseModule,
-		DatabaseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
-		ConfigModule.forRoot({
-			isGlobal: true,
-			validationSchema: Joi.object({
-				MONGODB_URI: Joi.string().required(),
-				PORT: Joi.number().required(),
-			}),
-		}),
-	],
-	controllers: [ProductsController],
-	providers: [ProductsService, ProductsRepository],
+  imports: [
+    LoggerModule,
+    DatabaseModule,
+    DatabaseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        MONGODB_URI: Joi.string().required(),
+        PORT: Joi.number().required(),
+      }),
+    }),
+  ],
+  controllers: [ProductsController],
+  providers: [ProductsService, ProductsRepository],
 })
 export class ProductsModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(cookieParser()).forRoutes("*");
-	}
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(cookieParser()).forRoutes("*");
+  }
 }

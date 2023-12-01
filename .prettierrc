@@ -1,5 +1,5 @@
 {
-	"useTabs": true,
+	"useTabs": false,
 	"singleQuote": false,
 	"printWidth": 100,
 	"importOrder": ["^@nestjs/(.*)$", "^@nx-micro-ecomm/server/(.*)$", "^[./]"],

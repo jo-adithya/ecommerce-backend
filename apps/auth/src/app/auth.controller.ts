@@ -13,33 +13,33 @@ import { AuthService } from "./auth.service";
 @Controller("auth")
 @Serialize(UserDto)
 export class AuthController {
-	constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-	@UseGuards(LocalAuthGuard)
-	@Post("signin")
-	async signIn(@CurrentUser() user: User, @Res({ passthrough: true }) response: Response) {
-		const cookieOptions = { secure: true, httpOnly: true, sameSite: true };
-		const { accessToken, refreshToken } = await this.authService.signIn(user);
-		response.cookie("accessToken", accessToken, cookieOptions);
-		response.cookie("refreshToken", refreshToken, cookieOptions);
-		return user;
-	}
+  @UseGuards(LocalAuthGuard)
+  @Post("signin")
+  async signIn(@CurrentUser() user: User, @Res({ passthrough: true }) response: Response) {
+    const cookieOptions = { secure: false, httpOnly: true, sameSite: true } as const;
+    const { accessToken, refreshToken } = await this.authService.signIn(user);
+    response.cookie("accessToken", accessToken, cookieOptions);
+    response.cookie("refreshToken", refreshToken, cookieOptions);
+    return user;
+  }
 
-	@Post("signup")
-	async signUp(@Body() createUserDto: CreateUserDto) {
-		return this.authService.signUp(createUserDto);
-	}
+  @Post("signup")
+  async signUp(@Body() createUserDto: CreateUserDto) {
+    return this.authService.signUp(createUserDto);
+  }
 
-	@UseGuards(JwtAuthGuard)
-	@Get("iam")
-	async iam(@CurrentUser() user: User) {
-		return user;
-	}
+  @UseGuards(JwtAuthGuard)
+  @Get("iam")
+  async iam(@CurrentUser() user: User) {
+    return user;
+  }
 
-	@UseGuards(LocalAuthGuard)
-	@Post("signout")
-	async signOut(@Res({ passthrough: true }) response: Response) {
-		response.clearCookie("accessToken");
-		response.clearCookie("refreshToken");
-	}
+  @UseGuards(LocalAuthGuard)
+  @Post("signout")
+  async signOut(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie("accessToken");
+    response.clearCookie("refreshToken");
+  }
 }

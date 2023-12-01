@@ -17,42 +17,42 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 
 @Module({
-	imports: [
-		LoggerModule,
-		ConfigModule,
-		UsersModule,
-		JwtModule.registerAsync(jwtConfig.asProvider()),
-		ConfigModule.forRoot({
-			isGlobal: true,
-			validationSchema: Joi.object({
-				MONGODB_URI: Joi.string().required(),
-				JWT_SECRET: Joi.string().required(),
-				JWT_TOKEN_AUDIENCE: Joi.string().required(),
-				JWT_TOKEN_ISSUER: Joi.string().required(),
-				JWT_ACCESS_TOKEN_TTL: Joi.number().required(),
-				JWT_REFRESH_TOKEN_TTL: Joi.number().required(),
-				PORT: Joi.number().required(),
-			}),
-			load: [jwtConfig],
-		}),
-	],
-	controllers: [AuthController],
-	providers: [
-		AuthService,
-		LocalStrategy,
-		JwtStrategy,
-		{
-			provide: HashingService,
-			useClass: ScryptService,
-		},
-		{
-			provide: APP_PIPE,
-			useValue: new ValidationPipe({ whitelist: true }),
-		},
-	],
+  imports: [
+    LoggerModule,
+    ConfigModule,
+    UsersModule,
+    JwtModule.registerAsync(jwtConfig.asProvider()),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        MONGODB_URI: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_TOKEN_AUDIENCE: Joi.string().required(),
+        JWT_TOKEN_ISSUER: Joi.string().required(),
+        JWT_ACCESS_TOKEN_TTL: Joi.number().required(),
+        JWT_REFRESH_TOKEN_TTL: Joi.number().required(),
+        PORT: Joi.number().required(),
+      }),
+      load: [jwtConfig],
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    {
+      provide: HashingService,
+      useClass: ScryptService,
+    },
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({ whitelist: true }),
+    },
+  ],
 })
 export class AuthModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(cookieParser()).forRoutes("*");
-	}
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(cookieParser()).forRoutes("*");
+  }
 }
