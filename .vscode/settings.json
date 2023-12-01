@@ -18,5 +18,8 @@
 		"typescriptreact",
 		"svelte"
 	],
-	"eslint.enable": true
+	"eslint.enable": true,
+	"[yaml]": {
+		"editor.defaultFormatter": "redhat.vscode-yaml"
+	}
 }

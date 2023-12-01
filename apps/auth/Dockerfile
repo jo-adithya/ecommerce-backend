@@ -1,4 +1,4 @@
-FROM node:alpine As development
+FROM node:alpine
 
 WORKDIR /usr/src/app
 
@@ -8,24 +8,8 @@ COPY package.json .
 COPY pnpm-lock.yaml .
 
 RUN npm install -g pnpm
-RUN pnpm i --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-CMD ["pnpm", "run", "build", "auth"]
-
-
-
-FROM node:alpine As production
-
-WORKDIR /usr/src/app
-
-COPY package.json .
-COPY pnpm-lock.yaml .
-
-RUN npm install -g pnpm
-RUN pnpm i --frozen-lockfile --prod --ignore-scripts
-
-COPY --from=development /usr/src/app/dist ./dist
-
-CMD ["node", "dist/apps/auth/main"]
+CMD ["pnpm", "run", "start", "auth"]

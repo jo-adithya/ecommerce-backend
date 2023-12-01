@@ -1,0 +1,21 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+build:
+  artifacts:
+    - image: joadithya/ecomm-auth
+      context: .
+      docker:
+        dockerfile: apps/auth/Dockerfile
+      sync:
+        manual:
+          - src: 'apps/auth/src/**/*.ts'
+            dest: .
+          - src: 'libs/server/**/*.ts'
+            dest: .
+  local:
+    push: false
+manifests:
+  rawYaml:
+    - infra/k8s/*
+deploy:
+  kubectl: {}
