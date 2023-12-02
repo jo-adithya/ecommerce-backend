@@ -12,10 +12,18 @@ build:
             dest: .
           - src: 'libs/server/**/*.ts'
             dest: .
+    - image: joadithya/ecomm-products
+      context: .
+      docker:
+        dockerfile: apps/products/Dockerfile
+      sync:
+        manual:
+          - src: 'apps/products/src/**/*.ts'
+            dest: .
+          - src: 'libs/server/**/*.ts'
+            dest: .
   local:
     push: false
 manifests:
   rawYaml:
-    - infra/k8s/*
-deploy:
-  kubectl: {}
+    - ./infra/k8s/*

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products
+  template:
+    metadata:
+      labels:
+        app: products
+    spec:
+      containers:
+        - name: products
+          image: joadithya/ecomm-products
+          envFrom:
+            - secretRef:
+                name: products-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: products-svc
+spec:
+  selector:
+    app: products
+  type: ClusterIP
+  ports:
+    - name: products
+      protocol: TCP
+      port: 3002
+      targetPort: 3002
