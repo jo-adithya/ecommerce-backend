@@ -1,36 +1,27 @@
 {
-	"compileOnSave": false,
-	"compilerOptions": {
-		"rootDir": ".",
-		"sourceMap": true,
-		"declaration": false,
-		"moduleResolution": "node",
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"importHelpers": true,
-		"target": "es2015",
-		"module": "esnext",
-		"lib": ["es2020", "dom"],
-		"skipLibCheck": true,
-		"skipDefaultLibCheck": true,
-		"baseUrl": ".",
-		"paths": {
-			"@nx-micro-ecomm/server/auth": [
-				"libs/server/auth/src/index.ts"
-			],
-			"@nx-micro-ecomm/server/config": [
-				"libs/server/config/src/index.ts"
-			],
-			"@nx-micro-ecomm/server/database": [
-				"libs/server/database/src/index.ts"
-			],
-			"@nx-micro-ecomm/server/interceptors": [
-				"libs/server/interceptors/src/index.ts"
-			],
-			"@nx-micro-ecomm/server/logger": [
-				"libs/server/logger/src/index.ts"
-			]
-		}
-	},
-	"exclude": ["node_modules", "tmp"]
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@nx-micro-ecomm/server/auth": ["libs/server/auth/src/index.ts"],
+      "@nx-micro-ecomm/server/config": ["libs/server/config/src/index.ts"],
+      "@nx-micro-ecomm/server/database": ["libs/server/database/src/index.ts"],
+      "@nx-micro-ecomm/server/interceptors": ["libs/server/interceptors/src/index.ts"],
+      "@nx-micro-ecomm/server/logger": ["libs/server/logger/src/index.ts"],
+      "@nx-micro-ecomm/server/nats-streaming": ["libs/server/nats-streaming/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
 }
