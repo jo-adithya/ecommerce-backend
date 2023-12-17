@@ -43,5 +43,6 @@ COPY --from=build --chown=node:node /usr/src/app/dist/apps/products ./
 ENV NODE_ENV=production
 
 RUN pnpm install
+RUN pnpm install tslib pino-pretty
 
 CMD ["node", "main.js"]
