@@ -10,6 +10,7 @@ import { NatsStreamingModule } from "@nx-micro-ecomm/server/nats-streaming";
 
 import { Product, ProductSchema } from "../models/product.schema";
 import { ProductCreatedPublisherService } from "../nats/product-created-publisher.service";
+import { ProductUpdatedPublisherService } from "../nats/product-updated-publisher.service";
 import { ProductsController } from "./products.controller";
 import { ProductsRepository } from "./products.repository";
 import { ProductsService } from "./products.service";
@@ -37,7 +38,12 @@ import { ProductsService } from "./products.service";
     }),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, ProductsRepository, ProductCreatedPublisherService],
+  providers: [
+    ProductsService,
+    ProductsRepository,
+    ProductCreatedPublisherService,
+    ProductUpdatedPublisherService,
+  ],
 })
 export class ProductsModule {
   configure(consumer: MiddlewareConsumer) {

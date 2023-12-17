@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
-import { CreateProductDto } from "../dtos/create-product.dto";
-import { UpdateProductDto } from "../dtos/update-product.dto";
-import { ProductCreatedPublisherService } from "../nats/product-created-publisher.service";
+import { CreateProductDto, UpdateProductDto } from "../dtos";
+import { ProductCreatedPublisherService, ProductUpdatedPublisherService } from "../nats";
 import { ProductsRepository } from "./products.repository";
 
 @Injectable()
@@ -10,15 +9,12 @@ export class ProductsService {
   constructor(
     private readonly productsRepository: ProductsRepository,
     private readonly productCreatedPublisher: ProductCreatedPublisherService,
+    private readonly productUpdatedPublisher: ProductUpdatedPublisherService,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
     const product = await this.productsRepository.create({ ...createProductDto, userId: "1" });
-    this.productCreatedPublisher.publish({
-      id: product._id.toString(),
-      title: product.title,
-      price: product.price,
-    });
+    this.productCreatedPublisher.publish({ ...product, id: product._id.toString() });
     return product;
   }
 
@@ -31,7 +27,12 @@ export class ProductsService {
   }
 
   async update(_id: string, updateProductDto: UpdateProductDto) {
-    return this.productsRepository.findOneAndUpdate({ _id }, { $set: updateProductDto });
+    const updatedProduct = await this.productsRepository.findOneAndUpdate(
+      { _id },
+      { $set: updateProductDto },
+    );
+    this.productUpdatedPublisher.publish({ ...updatedProduct, id: updatedProduct._id.toString() });
+    return updatedProduct;
   }
 
   async delete(_id: string) {
