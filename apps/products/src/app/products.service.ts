@@ -2,14 +2,24 @@ import { Injectable } from "@nestjs/common";
 
 import { CreateProductDto } from "../dtos/create-product.dto";
 import { UpdateProductDto } from "../dtos/update-product.dto";
+import { ProductCreatedPublisherService } from "../nats/product-created-publisher.service";
 import { ProductsRepository } from "./products.repository";
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly productsRepository: ProductsRepository) {}
+  constructor(
+    private readonly productsRepository: ProductsRepository,
+    private readonly productCreatedPublisher: ProductCreatedPublisherService,
+  ) {}
 
   async create(createProductDto: CreateProductDto) {
-    return this.productsRepository.create({ ...createProductDto, userId: "1" });
+    const product = await this.productsRepository.create({ ...createProductDto, userId: "1" });
+    this.productCreatedPublisher.publish({
+      id: product._id.toString(),
+      title: product.title,
+      price: product.price,
+    });
+    return product;
   }
 
   async findAll() {

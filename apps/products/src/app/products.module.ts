@@ -23,6 +23,10 @@ import { ProductsService } from "./products.service";
       clusterId: "ecomm",
       clientId: "products",
       url: "http://nats-svc:4222",
+      onShutdown: () => {
+        console.log("NATS connection closed!");
+        process.exit();
+      },
     }),
     ConfigModule.forRoot({
       isGlobal: true,
