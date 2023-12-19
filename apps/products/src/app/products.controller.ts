@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
 
 import { JwtAuthGuard } from "@nx-micro-ecomm/server/auth";
 
-import { CreateProductDto } from "../dtos/create-product.dto";
-import { UpdateProductDto } from "../dtos/update-product.dto";
+import { CreateProductDto, UpdateProductDto } from "../dtos";
+import { ProductDocument } from "../models/product.schema";
 import { ProductsService } from "./products.service";
 
 @Controller("products")
@@ -12,32 +12,30 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() createProductDto: CreateProductDto) {
+  async create(@Body() createProductDto: CreateProductDto): Promise<ProductDocument> | never {
     return this.productsService.create(createProductDto);
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<ProductDocument[]> {
     return this.productsService.findAll();
   }
 
   @Get(":id")
-  async findOne(@Param("id") id: string) {
+  async findOne(@Param("id") id: string): Promise<ProductDocument> | never {
     return this.productsService.findOne(id);
   }
 
-  @Patch(":id")
-  async update(@Param("id") id: string, @Body() updateProductDto: UpdateProductDto) {
+  @Put(":id")
+  async update(
+    @Param("id") id: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ): Promise<ProductDocument> | never {
     return this.productsService.update(id, updateProductDto);
   }
 
   @Delete(":id")
-  async delete(@Param("id") id: string) {
+  async delete(@Param("id") id: string): Promise<ProductDocument> | never {
     return this.productsService.delete(id);
-  }
-
-  @Get()
-  getData() {
-    return this.productsService.getData();
   }
 }
