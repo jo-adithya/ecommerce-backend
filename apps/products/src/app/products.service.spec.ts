@@ -4,6 +4,7 @@ import { NotFoundException } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 
 import { Product, ProductDocument } from "../models/product.schema";
+import { ProductCreatedPublisherService, ProductUpdatedPublisherService } from "../nats";
 import { ProductsRepository } from "./products.repository";
 import { ProductsService } from "./products.service";
 
@@ -11,6 +12,8 @@ describe("ProductsService", () => {
   let service: ProductsService;
   let products: ProductDocument[];
   let mockProductsRepository: Partial<ProductsRepository>;
+  let mockProductCreatedPublisher: Partial<ProductCreatedPublisherService>;
+  let mockProductUpdatedPublisher: Partial<ProductUpdatedPublisherService>;
 
   const mockProduct = { title: "Product #1", price: 20 };
 
@@ -37,7 +40,7 @@ describe("ProductsService", () => {
 
       findOneAndUpdate: jest.fn(async (filterQuery, updateQuery) => {
         const product = await findOne(filterQuery);
-        const updatedProduct = { ...product, ...updateQuery } as ProductDocument;
+        const updatedProduct = { ...product, ...updateQuery.$set } as ProductDocument;
         products = products.map((p) =>
           p._id.toString() === product._id.toString() ? updatedProduct : p,
         );
@@ -51,10 +54,15 @@ describe("ProductsService", () => {
       }),
     };
 
+    mockProductCreatedPublisher = { publish: jest.fn() };
+    mockProductUpdatedPublisher = { publish: jest.fn() };
+
     const app = await Test.createTestingModule({
       providers: [
         ProductsService,
         { provide: ProductsRepository, useValue: mockProductsRepository },
+        { provide: ProductCreatedPublisherService, useValue: mockProductCreatedPublisher },
+        { provide: ProductUpdatedPublisherService, useValue: mockProductUpdatedPublisher },
       ],
     }).compile();
 
@@ -70,8 +78,13 @@ describe("ProductsService", () => {
     it("should create a product", async () => {
       const product = await service.create(mockProduct);
 
-      expect(product).toBeDefined();
-      expect(product).toEqual(mockProduct);
+      expect(product._id).toBeDefined();
+      expect(product.title).toEqual(mockProduct.title);
+      expect(product.price).toEqual(mockProduct.price);
+      expect(mockProductCreatedPublisher.publish).toHaveBeenCalledWith({
+        ...product,
+        id: product._id.toString(),
+      });
     });
   });
 
@@ -114,6 +127,11 @@ describe("ProductsService", () => {
       expect(updatedProduct).toBeDefined();
       expect(updatedProduct.title).toEqual(updateProductDto.title);
       expect(updatedProduct.price).toEqual(updateProductDto.price);
+
+      expect(mockProductUpdatedPublisher.publish).toHaveBeenCalledWith({
+        ...updatedProduct,
+        id: product._id.toString(),
+      });
     });
 
     it("should throw an error if the product does not exist", async () => {
