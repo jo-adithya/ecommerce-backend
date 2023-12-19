@@ -2,7 +2,7 @@ import { Stan, connect } from "node-nats-streaming";
 
 import { Module } from "@nestjs/common";
 
-import { NATS_STREAMING_CLIENT, NATS_STREAMING_MODULE_OPTIONS } from "./nats-streaming.constants";
+import { NATS_STREAMING_MODULE_OPTIONS, getNatsClientToken } from "./nats-streaming.constants";
 import {
   NatsStreamingModuleAsyncOptions,
   NatsStreamingModuleOptions,
@@ -14,7 +14,7 @@ export class NatsStreamingModule {
     const { clusterId, clientId, url, onShutdown } = natsStreamingModuleOptions;
 
     const clientProvider = {
-      provide: NATS_STREAMING_CLIENT,
+      provide: getNatsClientToken(),
       useValue: this.createNatsStreamingClient(clusterId, clientId, url, onShutdown),
     };
 
@@ -33,7 +33,7 @@ export class NatsStreamingModule {
     };
 
     const clientProvider = {
-      provide: NATS_STREAMING_CLIENT,
+      provide: getNatsClientToken(),
       useFactory: (natsStreamingModuleOptions: NatsStreamingModuleOptions): Stan => {
         const { clusterId, clientId, url, onShutdown } = natsStreamingModuleOptions;
         return this.createNatsStreamingClient(clusterId, clientId, url, onShutdown);
