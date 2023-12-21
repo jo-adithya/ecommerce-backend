@@ -21,15 +21,6 @@ import { ProductsService } from "./products.service";
     LoggerModule,
     DatabaseModule,
     DatabaseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
-    NatsStreamingModule.forRoot({
-      clusterId: "ecomm",
-      clientId: "products",
-      url: "http://nats-svc:4222",
-      onShutdown: () => {
-        console.log("NATS connection closed!");
-        process.exit();
-      },
-    }),
     NatsStreamingModule.forRootAsync({
       useFactory: (natsConfiguration: ConfigType<typeof natsConfig>) => ({
         url: natsConfiguration.url,
