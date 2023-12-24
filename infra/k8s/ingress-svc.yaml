@@ -14,11 +14,18 @@ spec:
               service:
                 name: auth-svc
                 port:
-                  number: 3001
+                  number: 3000
           - path: /api/products
             pathType: Prefix
             backend:
               service:
                 name: products-svc
                 port:
-                  number: 3002
+                  number: 3000
+          - path: /api/orders
+            pathType: Prefix
+            backend:
+              service:
+                name: orders-svc
+                port:
+                  number: 3000
