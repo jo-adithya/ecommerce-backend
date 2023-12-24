@@ -22,6 +22,16 @@ build:
             dest: .
           - src: 'libs/server/**/*.ts'
             dest: .
+    - image: joadithya/ecomm-orders
+      context: .
+      docker:
+        dockerfile: apps/orders/Dockerfile
+      sync:
+        manual:
+          - src: 'apps/orders/src/**/*.ts'
+            dest: .
+          - src: 'libs/server/**/*.ts'
+            dest: .
   local:
     push: false
 manifests:
