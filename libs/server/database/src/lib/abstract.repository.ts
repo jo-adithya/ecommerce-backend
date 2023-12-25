@@ -63,7 +63,7 @@ export abstract class AbstractRepository<T> {
     return document;
   }
 
-  private assertDocumentExists(
+  protected assertDocumentExists(
     document: FlattenMaps<T> | null,
     filterQuery: FilterQuery<T>,
   ): asserts document is FlattenMaps<T> {
