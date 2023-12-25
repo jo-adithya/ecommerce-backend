@@ -19,7 +19,8 @@
       "@nx-micro-ecomm/server/database": ["libs/server/database/src/index.ts"],
       "@nx-micro-ecomm/server/interceptors": ["libs/server/interceptors/src/index.ts"],
       "@nx-micro-ecomm/server/logger": ["libs/server/logger/src/index.ts"],
-      "@nx-micro-ecomm/server/nats-streaming": ["libs/server/nats-streaming/src/index.ts"]
+      "@nx-micro-ecomm/server/nats-streaming": ["libs/server/nats-streaming/src/index.ts"],
+      "@nx-micro-ecomm/server/orders": ["libs/server/orders/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
