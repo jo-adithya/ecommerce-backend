@@ -16,6 +16,8 @@ spec:
         - name: orders
           image: joadithya/ecomm-orders
           env:
+            - name: EXPIRATION_WINDOW_SECONDS
+              value: "900"
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:
