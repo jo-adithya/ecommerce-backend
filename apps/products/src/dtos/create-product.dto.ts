@@ -8,4 +8,8 @@ export class CreateProductDto {
   @IsNumber()
   @IsPositive()
   price: number;
+
+  @IsNumber()
+  @IsPositive()
+  quantity: number;
 }

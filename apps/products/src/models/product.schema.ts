@@ -11,11 +11,14 @@ export class Product extends AbstractDocument {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, min: 0 })
   price: number;
 
   @Prop({ required: true })
   userId: string;
+
+  @Prop({ required: true, min: 0 })
+  quantity: number;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
