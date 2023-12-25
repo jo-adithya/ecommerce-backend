@@ -2,9 +2,9 @@ import { Response } from "express";
 
 import { Body, Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
 
+import { CurrentUser } from "@nx-micro-ecomm/server/auth";
 import { Serialize } from "@nx-micro-ecomm/server/interceptors";
 
-import { CurrentUser } from "../decorators";
 import { CreateUserDto, UserDto } from "../dtos";
 import { JwtAuthGuard, LocalAuthGuard } from "../guards";
 import { User } from "../models/user.schema";
