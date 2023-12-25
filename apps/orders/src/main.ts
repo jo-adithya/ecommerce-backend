@@ -1,4 +1,4 @@
-import { PinoLogger } from "nestjs-pino";
+import { Logger as PinoLogger } from "nestjs-pino";
 
 import { Logger, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";

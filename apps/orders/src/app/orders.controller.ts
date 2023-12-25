@@ -1,13 +1,45 @@
-import { Controller, Get } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
 
+import { CurrentUser, JwtAuthGuard, UserDto } from "@nx-micro-ecomm/server/auth";
+
+import { CreateOrderDto } from "./dtos";
 import { OrdersService } from "./orders.service";
 
-@Controller()
+@UseGuards(JwtAuthGuard)
+@Controller("orders")
 export class OrdersController {
-  constructor(private readonly appService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService) {}
 
+  @HttpCode(HttpStatus.OK)
   @Get()
-  getData() {
-    return this.appService.getData();
+  getAllOrders(@CurrentUser() user: UserDto) {
+    return this.ordersService.getAllOrdersByUserId(user.id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get(":id")
+  getOrderById(@CurrentUser() user: UserDto, @Param("id") orderId: string) {
+    return this.ordersService.getOrderById(user.id, orderId);
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Post()
+  createOrder(@CurrentUser() user: UserDto, @Body() createOrderDto: CreateOrderDto) {
+    return this.ordersService.createOrder(user.id, createOrderDto);
+  }
+
+  @Patch(":id")
+  cancelOrder(@CurrentUser() user: UserDto, @Param("id") orderId: string) {
+    return this.ordersService.cancelOrder(user.id, orderId);
   }
 }

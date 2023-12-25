@@ -16,11 +16,21 @@
         "tsConfig": "apps/orders/tsconfig.app.json",
         "assets": ["apps/orders/src/assets"],
         "isolatedConfig": true,
-        "webpackConfig": "apps/orders/webpack.config.js"
+        "webpackConfig": "apps/orders/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
-        "development": {},
-        "production": {}
+        "development": {
+          "buildLibsFromSrc": true,
+          "generatePackageJson": true
+        },
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "generatePackageJson": true,
+          "buildLibsFromSrc": true
+        }
       }
     },
     "serve": {
