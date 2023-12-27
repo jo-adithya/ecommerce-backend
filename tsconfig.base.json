@@ -14,11 +14,12 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@nx-micro-ecomm/kysely": ["libs/server/kysely/src/index.ts"],
       "@nx-micro-ecomm/server/auth": ["libs/server/auth/src/index.ts"],
       "@nx-micro-ecomm/server/config": ["libs/server/config/src/index.ts"],
-      "@nx-micro-ecomm/server/mongoose": ["libs/server/mongoose/src/index.ts"],
       "@nx-micro-ecomm/server/interceptors": ["libs/server/interceptors/src/index.ts"],
       "@nx-micro-ecomm/server/logger": ["libs/server/logger/src/index.ts"],
+      "@nx-micro-ecomm/server/mongoose": ["libs/server/mongoose/src/index.ts"],
       "@nx-micro-ecomm/server/nats-streaming": ["libs/server/nats-streaming/src/index.ts"],
       "@nx-micro-ecomm/server/orders": ["libs/server/orders/src/index.ts"]
     }
