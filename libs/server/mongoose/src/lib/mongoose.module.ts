@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { ModelDefinition, MongooseModule as _MongooseModule } from "@nestjs/mongoose";
 
-import { dbConfig } from "@nx-micro-ecomm/server/config";
+import { mongoConfig } from "@nx-micro-ecomm/server/config";
 
 @Module({
-  imports: [_MongooseModule.forRootAsync(dbConfig.asProvider())],
+  imports: [_MongooseModule.forRootAsync(mongoConfig.asProvider())],
   providers: [],
   exports: [],
 })
