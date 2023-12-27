@@ -3,7 +3,7 @@ import { Model } from "mongoose";
 import { Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 
-import { AbstractRepository } from "@nx-micro-ecomm/server/database";
+import { AbstractRepository } from "@nx-micro-ecomm/server/mongoose";
 
 import { User } from "../models/user.schema";
 

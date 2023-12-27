@@ -5,8 +5,8 @@ import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule, ConfigType } from "@nestjs/config";
 
 import { natsConfig } from "@nx-micro-ecomm/server/config";
-import { DatabaseModule } from "@nx-micro-ecomm/server/database";
 import { LoggerModule } from "@nx-micro-ecomm/server/logger";
+import { MongooseModule } from "@nx-micro-ecomm/server/mongoose";
 import { NatsStreamingModule } from "@nx-micro-ecomm/server/nats-streaming";
 
 import { Product, ProductSchema } from "../models/product.schema";
@@ -19,8 +19,8 @@ import { ProductsService } from "./products.service";
 @Module({
   imports: [
     LoggerModule,
-    DatabaseModule,
-    DatabaseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
+    MongooseModule,
+    MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
     NatsStreamingModule.forRootAsync({
       useFactory: (natsConfiguration: ConfigType<typeof natsConfig>) => ({
         url: natsConfiguration.url,

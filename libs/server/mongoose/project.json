@@ -1,21 +1,21 @@
 {
-  "name": "database",
+  "name": "mongoose",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/server/database/src",
+  "sourceRoot": "libs/server/mongoose/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/server/database/**/*.ts"]
+        "lintFilePatterns": ["libs/server/mongoose/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/server/database/jest.config.ts"
+        "jestConfig": "libs/server/mongoose/jest.config.ts"
       }
     }
   },

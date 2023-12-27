@@ -1,15 +1,15 @@
 import { Module } from "@nestjs/common";
-import { ModelDefinition, MongooseModule } from "@nestjs/mongoose";
+import { ModelDefinition, MongooseModule as _MongooseModule } from "@nestjs/mongoose";
 
 import { dbConfig } from "@nx-micro-ecomm/server/config";
 
 @Module({
-  imports: [MongooseModule.forRootAsync(dbConfig.asProvider())],
+  imports: [_MongooseModule.forRootAsync(dbConfig.asProvider())],
   providers: [],
   exports: [],
 })
-export class DatabaseModule {
+export class MongooseModule {
   static forFeature(models?: ModelDefinition[] | undefined, connectionName?: string | undefined) {
-    return MongooseModule.forFeature(models, connectionName);
+    return _MongooseModule.forFeature(models, connectionName);
   }
 }

@@ -2,7 +2,7 @@ import { FlattenMaps } from "mongoose";
 
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
-import { AbstractDocument } from "@nx-micro-ecomm/server/database";
+import { AbstractDocument } from "@nx-micro-ecomm/server/mongoose";
 
 export type UserDocument = FlattenMaps<User>;
 

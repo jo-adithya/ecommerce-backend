@@ -2,7 +2,7 @@ import { FlattenMaps, SchemaTypes } from "mongoose";
 
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
-import { AbstractDocument } from "@nx-micro-ecomm/server/database";
+import { AbstractDocument } from "@nx-micro-ecomm/server/mongoose";
 import { OrderStatus } from "@nx-micro-ecomm/server/orders";
 
 import { Product } from "../../products";
