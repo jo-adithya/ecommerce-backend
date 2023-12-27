@@ -1,9 +1,9 @@
-import { Kysely, KyselyConfig, PostgresDialect } from "kysely";
+import { CamelCasePlugin, Kysely, KyselyConfig, PostgresDialect } from "kysely";
 import { Pool } from "pg";
 
 import { Module } from "@nestjs/common";
 
-import { kyselyConfig } from "@nx-micro-ecomm/server/config";
+import { postgresConfig } from "@nx-micro-ecomm/server/config";
 
 import {
   getKyselyConfigToken,
@@ -16,7 +16,7 @@ import { KyselyModuleOptions } from "./kysely.module-definition";
   imports: [],
   controllers: [],
   providers: [
-    { provide: getKyselyModuleOptionsToken(), ...kyselyConfig.asProvider() },
+    { provide: getKyselyModuleOptionsToken(), ...postgresConfig.asProvider() },
     {
       provide: getKyselyConfigToken(),
       inject: [getKyselyModuleOptionsToken()],
@@ -24,6 +24,7 @@ import { KyselyModuleOptions } from "./kysely.module-definition";
         dialect: new PostgresDialect({
           pool: new Pool(kyselyModuleOptions),
         }),
+        plugins: [new CamelCasePlugin()],
       }),
     },
     {
