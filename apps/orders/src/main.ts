@@ -7,7 +7,7 @@ import { NestFactory } from "@nestjs/core";
 import { OrdersModule } from "./app/orders.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create(OrdersModule);
+  const app = await NestFactory.create(OrdersModule, { logger: ["debug", "error", "log"] });
   const globalPrefix = "api";
   app.setGlobalPrefix(globalPrefix);
   app.useLogger(app.get(PinoLogger));

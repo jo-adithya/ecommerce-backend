@@ -1,44 +1,59 @@
-import { Model } from "mongoose";
+import { Kysely } from "kysely";
 
-import { Injectable, Logger } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 
-import { AbstractRepository } from "@nx-micro-ecomm/server/mongoose";
+import { InjectKysely } from "@nx-micro-ecomm/server/kysely";
 import { OrderStatus } from "@nx-micro-ecomm/server/orders";
 
-import { Order, OrderDocument } from "./models";
+import { Database } from "../database";
+import { Order } from "../models";
 
 @Injectable()
-export class OrdersRepository extends AbstractRepository<Order> {
-  logger = new Logger(OrdersRepository.name);
+export class OrdersRepository {
+  private logger = new Logger(OrdersRepository.name);
 
-  constructor(@InjectModel(Order.name) model: Model<Order>) {
-    super(model);
+  constructor(@InjectKysely() private readonly db: Kysely<Database>) {}
+
+  async createOrder(order: Omit<Order, "id">): Promise<Order> | never {
+    this.logger.debug(`Creating order: ${JSON.stringify(order)}`);
+    return this.db.insertInto("order").values(order).returningAll().executeTakeFirst();
   }
 
-  async findOrdersByUserId(userId: string): Promise<OrderDocument[]> | never {
+  async getAllOrders(userId: string): Promise<Order[]> | never {
     this.logger.debug(`Finding orders by user id: ${userId}`);
-    return this.model.find({ userId }).populate("product").lean().exec();
+    return this.db.selectFrom("order").selectAll().where("userId", "=", userId).execute();
   }
 
-  async findOrderById(userId: string, orderId: string): Promise<OrderDocument> | never {
+  async getOrderById(userId: string, orderId: string): Promise<Order> | never {
     this.logger.debug(`Finding order by order id: ${orderId}`);
-    const filterQuery = { _id: orderId, userId };
-    const order = await this.model.findOne(filterQuery).populate("product").lean().exec();
-    this.assertDocumentExists(order, filterQuery);
-    return order;
+    return this.db
+      .selectFrom("order")
+      .innerJoin("product", "order.productId", "product.id")
+      .selectAll()
+      .where("userId", "=", userId)
+      .where("id", "=", orderId)
+      .executeTakeFirstOrThrow(() => new NotFoundException("Order not found"));
   }
 
-  async cancelOrder(userId: string, orderId: string): Promise<OrderDocument> | never {
+  async getAllReservedOrdersByProductId(
+    productId: string,
+  ): Promise<Pick<Order, "id" | "quantity">[]> | never {
+    this.logger.debug(`Finding all orders except cancelled`);
+    return this.db
+      .selectFrom("order")
+      .select(["id", "quantity"])
+      .where("productId", "=", productId)
+      .where("status", "!=", OrderStatus.Cancelled)
+      .execute();
+  }
+
+  async cancelOrder(userId: string, orderId: string): Promise<Order> | never {
     this.logger.debug(`Cancelling order by order id: ${orderId}`);
-    const filterQuery = { _id: orderId, userId };
-    const updateQuery = { $set: { status: OrderStatus.Cancelled } };
-    const updatedOrder = await this.model
-      .findOneAndUpdate(filterQuery, updateQuery)
-      .populate("product")
-      .lean()
-      .exec();
-    this.assertDocumentExists(updatedOrder, filterQuery);
-    return updatedOrder;
+    return this.db
+      .updateTable("order")
+      .set({ status: OrderStatus.Cancelled })
+      .where("id", "=", orderId)
+      .returningAll()
+      .executeTakeFirstOrThrow(() => new NotFoundException("Order not found"));
   }
 }

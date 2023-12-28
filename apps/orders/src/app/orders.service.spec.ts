@@ -15,18 +15,18 @@ describe("OrdersService", () => {
 
   const mockUserId = new Types.ObjectId().toString();
   const mockProduct = {
-    _id: new Types.ObjectId(),
+    id: "1",
     title: "Test",
     price: 10,
     quantity: 1,
   };
-  const mockOrder = { productId: mockProduct._id.toString(), quantity: 1 };
-  const mockOutOfStockOrder = { productId: mockProduct._id.toString(), quantity: 2 };
+  const mockOrder = { productId: mockProduct.id, quantity: 1 };
+  const mockOutOfStockOrder = { productId: mockProduct.id, quantity: 2 };
   const mockOrdersRepository: Partial<jest.Mocked<OrdersRepository>> = {
-    find: jest.fn(),
-    create: jest.fn((document) => Promise.resolve({ ...document, _id: new Types.ObjectId() })),
-    findOrdersByUserId: jest.fn(),
-    findOrderById: jest.fn(),
+    createOrder: jest.fn((document) => Promise.resolve({ ...document, id: "1" })),
+    getAllOrders: jest.fn(),
+    getOrderById: jest.fn(),
+    getAllReservedOrdersByProductId: jest.fn(),
     cancelOrder: jest.fn(),
   };
   const mockProductsService: Partial<jest.Mocked<ProductsService>> = {
@@ -66,7 +66,7 @@ describe("OrdersService", () => {
 
     it("should throw an error if product is out of stock", async () => {
       mockProductsService.getProductById.mockResolvedValueOnce(mockProduct);
-      mockOrdersRepository.find.mockResolvedValueOnce([]);
+      mockOrdersRepository.getAllReservedOrdersByProductId.mockResolvedValueOnce([]);
 
       await expect(service.createOrder(mockUserId, mockOutOfStockOrder)).rejects.toThrow(
         BadRequestException,
@@ -75,11 +75,11 @@ describe("OrdersService", () => {
 
     it("should successfully reserve a product", async () => {
       mockProductsService.getProductById.mockResolvedValueOnce(mockProduct);
-      mockOrdersRepository.find.mockResolvedValueOnce([]);
+      mockOrdersRepository.getAllReservedOrdersByProductId.mockResolvedValueOnce([]);
 
       const order = await service.createOrder(mockUserId, mockOrder);
 
-      expect(order._id).toBeDefined();
+      expect(order.id).toBeDefined();
       expect(order.userId).toEqual(mockUserId);
       expect(order.status).toEqual(OrderStatus.Created);
       expect(order.expiresAt).toBeDefined();
@@ -87,29 +87,29 @@ describe("OrdersService", () => {
     });
   });
 
-  describe("getAllOrdersByUserId", () => {
+  describe("getAllOrders", () => {
     it("should return all orders for a user", async () => {
-      mockOrdersRepository.findOrdersByUserId.mockResolvedValueOnce([
+      mockOrdersRepository.getAllOrders.mockResolvedValueOnce([
         {
-          _id: new Types.ObjectId(),
+          id: "1",
           userId: mockUserId,
           status: OrderStatus.Created,
           expiresAt: new Date(),
           quantity: mockOrder.quantity,
-          product: mockProduct,
+          productId: mockProduct.id,
         },
       ]);
 
-      const orders = await service.getAllOrdersByUserId(mockUserId);
+      const orders = await service.getAllOrders(mockUserId);
 
       expect(orders.length).toEqual(1);
       expect(orders[0].userId).toEqual(mockUserId);
     });
 
     it("should return an empty array if user has no order", async () => {
-      mockOrdersRepository.findOrdersByUserId.mockResolvedValueOnce([]);
+      mockOrdersRepository.getAllOrders.mockResolvedValueOnce([]);
 
-      const orders = await service.getAllOrdersByUserId(mockUserId);
+      const orders = await service.getAllOrders(mockUserId);
 
       expect(orders).toEqual([]);
     });
@@ -117,7 +117,7 @@ describe("OrdersService", () => {
 
   describe("getOrderById", () => {
     it("should throw an error if order does not exist or user id is not valid", async () => {
-      mockOrdersRepository.findOrderById.mockRejectedValueOnce(new NotFoundException());
+      mockOrdersRepository.getOrderById.mockRejectedValueOnce(new NotFoundException());
 
       await expect(service.getOrderById(mockUserId, mockOrder.productId)).rejects.toThrow(
         NotFoundException,
@@ -125,20 +125,20 @@ describe("OrdersService", () => {
     });
 
     it("should return an order if it exists", async () => {
-      const mockOrderId = new Types.ObjectId();
-      mockOrdersRepository.findOrderById.mockResolvedValueOnce({
-        _id: mockOrderId,
+      const mockOrderId = "123";
+      mockOrdersRepository.getOrderById.mockResolvedValueOnce({
+        id: mockOrderId,
         userId: mockUserId,
         status: OrderStatus.Created,
         expiresAt: new Date(),
         quantity: mockOrder.quantity,
-        product: mockProduct,
+        productId: mockProduct.id,
       });
 
       const order = await service.getOrderById(mockUserId, mockOrder.productId);
 
       expect(order.userId).toEqual(mockUserId);
-      expect(order._id.toString()).toEqual(mockOrderId.toString());
+      expect(order.id).toEqual(mockOrderId);
     });
   });
 
@@ -152,20 +152,20 @@ describe("OrdersService", () => {
     });
 
     it("should return an order if it exists", async () => {
-      const mockOrderId = new Types.ObjectId();
+      const mockOrderId = "123";
       mockOrdersRepository.cancelOrder.mockResolvedValueOnce({
-        _id: mockOrderId,
+        id: mockOrderId,
         userId: mockUserId,
         status: OrderStatus.Cancelled,
         expiresAt: new Date(),
         quantity: mockOrder.quantity,
-        product: mockProduct,
+        productId: mockProduct.id,
       });
 
       const order = await service.cancelOrder(mockUserId, mockOrder.productId);
 
       expect(order.userId).toEqual(mockUserId);
-      expect(order._id.toString()).toEqual(mockOrderId.toString());
+      expect(order.id).toEqual(mockOrderId);
       expect(order.status).toEqual(OrderStatus.Cancelled);
     });
   });

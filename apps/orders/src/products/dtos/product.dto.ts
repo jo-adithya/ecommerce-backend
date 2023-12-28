@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
 
-export class ProductDto {
-  @Expose({ name: "_id" })
+export class Product {
+  @Expose()
   id: string;
 
   @Expose()
@@ -11,5 +11,5 @@ export class ProductDto {
   price: number;
 
   @Expose()
-  quantity: number;
+  quantity: string;
 }

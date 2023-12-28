@@ -11,10 +11,12 @@ import {
 } from "@nestjs/common";
 
 import { CurrentUser, JwtAuthGuard, UserDto } from "@nx-micro-ecomm/server/auth";
+import { Serialize } from "@nx-micro-ecomm/server/interceptors";
 
-import { CreateOrderDto } from "./dtos";
+import { CreateOrderDto, OrderDto } from "./dtos";
 import { OrdersService } from "./orders.service";
 
+@Serialize(OrderDto)
 @UseGuards(JwtAuthGuard)
 @Controller("orders")
 export class OrdersController {
@@ -23,7 +25,7 @@ export class OrdersController {
   @HttpCode(HttpStatus.OK)
   @Get()
   getAllOrders(@CurrentUser() user: UserDto) {
-    return this.ordersService.getAllOrdersByUserId(user.id);
+    return this.ordersService.getAllOrders(user.id);
   }
 
   @HttpCode(HttpStatus.OK)

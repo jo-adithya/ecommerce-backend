@@ -25,7 +25,9 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN pnpm run build orders
+RUN pnpm build db-migrations
+RUN pnpm build orders
+
 
 ######################
 # PRODUCTION STAGE
@@ -39,6 +41,7 @@ WORKDIR /usr/src/app
 
 # Copy only the required files to the final container
 COPY --from=build --chown=node:node /usr/src/app/dist/apps/orders ./
+COPY --from=build --chown=node:node /usr/src/app/dist/libs/server/db-migrations/src/orders ./db/migrations
 
 ENV NODE_ENV=production
 

@@ -4,9 +4,9 @@ import { ConfigType } from "@nestjs/config";
 import { ordersConfig } from "@nx-micro-ecomm/server/config";
 import { OrderStatus } from "@nx-micro-ecomm/server/orders";
 
-import { ProductDocument, ProductsService } from "../products";
+import { Order, Product } from "../models";
+import { ProductsService } from "../products";
 import { CreateOrderDto } from "./dtos";
-import { OrderDocument } from "./models";
 import { OrdersRepository } from "./orders.repository";
 
 @Injectable()
@@ -17,12 +17,9 @@ export class OrdersService {
     @Inject(ordersConfig.KEY) private readonly ordersConfiguration: ConfigType<typeof ordersConfig>,
   ) {}
 
-  async createOrder(
-    userId: string,
-    createOrderDto: CreateOrderDto,
-  ): Promise<OrderDocument> | never {
+  async createOrder(userId: string, createOrderDto: CreateOrderDto): Promise<Order> | never {
     // Find the product associated with the order
-    const product = await this.productsService.getProductById({ _id: createOrderDto.productId });
+    const product = await this.productsService.getProductById({ id: createOrderDto.productId });
 
     // Make sure that the product has enough quantity available
     await this.checkProductAvailability(product, createOrderDto.quantity);
@@ -32,12 +29,12 @@ export class OrdersService {
     expiration.setSeconds(expiration.getSeconds() + this.ordersConfiguration.expirationSeconds);
 
     // Build the order and save it to the database
-    const order = await this.ordersRepository.create({
+    const order = await this.ordersRepository.createOrder({
       userId,
       status: OrderStatus.Created,
       expiresAt: expiration,
       quantity: createOrderDto.quantity,
-      product,
+      productId: createOrderDto.productId,
     });
 
     // TODO: Publish an order created event
@@ -45,26 +42,20 @@ export class OrdersService {
     return order;
   }
 
-  async getAllOrdersByUserId(userId: string): Promise<OrderDocument[]> {
-    return this.ordersRepository.findOrdersByUserId(userId);
+  async getAllOrders(userId: string): Promise<Order[]> {
+    return this.ordersRepository.getAllOrders(userId);
   }
 
-  async getOrderById(userId: string, orderId: string): Promise<OrderDocument> | never {
-    return this.ordersRepository.findOrderById(userId, orderId);
+  async getOrderById(userId: string, orderId: string): Promise<Order> | never {
+    return this.ordersRepository.getOrderById(userId, orderId);
   }
 
-  async cancelOrder(userId: string, orderId: string): Promise<OrderDocument> | never {
+  async cancelOrder(userId: string, orderId: string): Promise<Order> | never {
     return this.ordersRepository.cancelOrder(userId, orderId);
   }
 
-  async checkProductAvailability(product: ProductDocument, quantity: number) {
-    const filterQuery = {
-      product,
-      status: {
-        $in: [OrderStatus.Created, OrderStatus.AwaitingPayment, OrderStatus.Complete],
-      },
-    };
-    const orders = await this.ordersRepository.find(filterQuery);
+  async checkProductAvailability(product: Product, quantity: number) {
+    const orders = await this.ordersRepository.getAllReservedOrdersByProductId(product.id);
     if (orders.reduce((acc, order) => acc + order.quantity, 0) + quantity > product.quantity) {
       throw new BadRequestException("Product is out of stock");
     }

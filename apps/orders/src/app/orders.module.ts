@@ -1,16 +1,16 @@
 import cookieParser from "cookie-parser";
 import Joi from "joi";
+import * as path from "path";
 
 import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule, ConfigType } from "@nestjs/config";
 
-import { natsConfig, ordersConfig } from "@nx-micro-ecomm/server/config";
+import { natsConfig, ordersConfig, postgresConfig } from "@nx-micro-ecomm/server/config";
+import { KyselyModule } from "@nx-micro-ecomm/server/kysely";
 import { LoggerModule } from "@nx-micro-ecomm/server/logger";
-import { MongooseModule } from "@nx-micro-ecomm/server/mongoose";
 import { NatsStreamingModule } from "@nx-micro-ecomm/server/nats-streaming";
 
 import { ProductsModule } from "../products";
-import { Order, OrderSchema } from "./models";
 import { OrdersController } from "./orders.controller";
 import { OrdersRepository } from "./orders.repository";
 import { OrdersService } from "./orders.service";
@@ -18,8 +18,9 @@ import { OrdersService } from "./orders.service";
 @Module({
   imports: [
     LoggerModule,
-    MongooseModule,
-    MongooseModule.forFeature([{ name: Order.name, schema: OrderSchema }]),
+    KyselyModule.forRoot({
+      migrationFolder: path.join(__dirname, "db/migrations"),
+    }),
     ProductsModule,
     NatsStreamingModule.forRootAsync({
       useFactory: (natsConfiguration: ConfigType<typeof natsConfig>) => ({
@@ -37,13 +38,17 @@ import { OrdersService } from "./orders.service";
       isGlobal: true,
       validationSchema: Joi.object({
         EXPIRATION_WINDOW_SECONDS: Joi.number().required(),
-        MONGODB_URI: Joi.string().required(),
+        POSTGRES_HOST: Joi.string().required(),
+        POSTGRES_NAME: Joi.string().required(),
+        POSTGRES_PORT: Joi.number().required(),
+        POSTGRES_USERNAME: Joi.string().required(),
+        POSTGRES_PASSWORD: Joi.string().required(),
         NATS_URL: Joi.string().required(),
         NATS_CLUSTER_ID: Joi.string().required(),
         NATS_CLIENT_ID: Joi.string().required(),
         PORT: Joi.number().required(),
       }),
-      load: [natsConfig, ordersConfig],
+      load: [natsConfig, ordersConfig, postgresConfig],
     }),
   ],
   controllers: [OrdersController],

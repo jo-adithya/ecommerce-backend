@@ -48,7 +48,7 @@ describe("OrdersController", () => {
 
     it("should successfully reserve a product", async () => {
       mockOrdersService.createOrder.mockResolvedValue({
-        _id: new Types.ObjectId(),
+        id: new Types.ObjectId(),
         userId: mockUser.id,
         status: OrderStatus.Created,
         expiresAt: new Date().setSeconds(new Date().getSeconds() + 15 * 60),
@@ -58,7 +58,7 @@ describe("OrdersController", () => {
 
       const order = await controller.createOrder(mockUser, mockOrder);
 
-      expect(order._id).toBeDefined();
+      expect(order.id).toBeDefined();
       expect(order.userId).toEqual(mockUser.id);
       expect(order.status).toEqual(OrderStatus.Created);
       expect(order.expiresAt).toBeDefined();
