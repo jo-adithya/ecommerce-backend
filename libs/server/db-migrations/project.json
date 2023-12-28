@@ -1,0 +1,37 @@
+{
+  "name": "db-migrations",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/server/db-migrations/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/server/db-migrations",
+        "tsConfig": "libs/server/db-migrations/tsconfig.lib.json",
+        "packageJson": "libs/server/db-migrations/package.json",
+        "main": "libs/server/db-migrations/src/index.ts",
+        "assets": ["libs/server/db-migrations/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/server/db-migrations/**/*.ts",
+          "libs/server/db-migrations/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/server/db-migrations/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
