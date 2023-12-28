@@ -1,6 +1,4 @@
-import { FactoryProvider, ModuleMetadata } from "@nestjs/common";
-
-export interface KyselyModuleOptions {
+export interface KyselyPoolOptions {
   name: string;
   host: string;
   port: number;
@@ -8,5 +6,6 @@ export interface KyselyModuleOptions {
   password: string;
 }
 
-export type NatsStreamingModuleAsyncOptions = Pick<ModuleMetadata, "imports"> &
-  Pick<FactoryProvider<KyselyModuleOptions>, "inject" | "useFactory">;
+export interface KyselyModuleOptions {
+  migrationFolder: string;
+}

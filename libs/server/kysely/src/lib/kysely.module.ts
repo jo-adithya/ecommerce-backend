@@ -1,7 +1,7 @@
 import { CamelCasePlugin, Kysely, KyselyConfig, PostgresDialect } from "kysely";
 import { Pool } from "pg";
 
-import { Module } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
 
 import { postgresConfig } from "@nx-micro-ecomm/server/config";
 
@@ -9,32 +9,45 @@ import {
   getKyselyConfigToken,
   getKyselyInstanceToken,
   getKyselyModuleOptionsToken,
+  getKyselyPoolOptionsToken,
 } from "./kysely.constants";
-import { KyselyModuleOptions } from "./kysely.module-definition";
+import { KyselyModuleOptions, KyselyPoolOptions } from "./kysely.module-definition";
+import { KyselyService } from "./kysely.service";
 
-@Module({
-  imports: [],
-  controllers: [],
-  providers: [
-    { provide: getKyselyModuleOptionsToken(), ...postgresConfig.asProvider() },
-    {
-      provide: getKyselyConfigToken(),
-      inject: [getKyselyModuleOptionsToken()],
-      useFactory: (kyselyModuleOptions: KyselyModuleOptions): KyselyConfig => ({
-        dialect: new PostgresDialect({
-          pool: new Pool(kyselyModuleOptions),
-        }),
-        plugins: [new CamelCasePlugin()],
-      }),
-    },
-    {
+@Global()
+@Module({})
+export class KyselyModule {
+  static forRoot(options: KyselyModuleOptions) {
+    const kyselyInstanceProvider = {
       provide: getKyselyInstanceToken(),
       inject: [getKyselyConfigToken()],
       useFactory: (kyselyConfig: KyselyConfig) => {
         return new Kysely(kyselyConfig);
       },
-    },
-  ],
-  exports: [getKyselyInstanceToken()],
-})
-export class KyselyModule {}
+    };
+
+    return {
+      module: KyselyModule,
+      providers: [
+        {
+          provide: getKyselyModuleOptionsToken(),
+          useFactory: () => options,
+        },
+        { provide: getKyselyPoolOptionsToken(), ...postgresConfig.asProvider() },
+        {
+          provide: getKyselyConfigToken(),
+          inject: [getKyselyPoolOptionsToken()],
+          useFactory: (kyselyPoolOptions: KyselyPoolOptions): KyselyConfig => ({
+            dialect: new PostgresDialect({
+              pool: new Pool(kyselyPoolOptions),
+            }),
+            plugins: [new CamelCasePlugin()],
+          }),
+        },
+        kyselyInstanceProvider,
+        KyselyService,
+      ],
+      exports: [kyselyInstanceProvider],
+    };
+  }
+}
