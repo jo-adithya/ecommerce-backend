@@ -7,6 +7,7 @@ import { InjectKysely } from "@nx-micro-ecomm/server/kysely";
 import { Database } from "../database";
 import { Product } from "../models";
 import { CreateProductDto, GetProductByIdDto } from "./dtos";
+import { UpdateProductDto } from "./dtos/update-product-dto";
 
 @Injectable()
 export class ProductsRepository {
@@ -15,7 +16,7 @@ export class ProductsRepository {
   constructor(@InjectKysely() private readonly db: Kysely<Database>) {}
 
   async createProduct(createProductDto: CreateProductDto): Promise<Product> | never {
-    this.logger.debug(`Creating Product: ${JSON.stringify(createProductDto)}`);
+    this.logger.log(`Creating Product: ${JSON.stringify(createProductDto)}`);
     return this.db
       .insertInto("product")
       .values(createProductDto)
@@ -29,6 +30,16 @@ export class ProductsRepository {
       .selectFrom("product")
       .selectAll()
       .where("id", "=", getProductByIdDto.id)
+      .executeTakeFirstOrThrow(() => new NotFoundException("Product not found"));
+  }
+
+  async updateProduct(updateProductDto: UpdateProductDto): Promise<Product> | never {
+    this.logger.log(`Updating Product: ${JSON.stringify(updateProductDto)}`);
+    return this.db
+      .updateTable("product")
+      .set(updateProductDto)
+      .where("id", "=", updateProductDto.id)
+      .returningAll()
       .executeTakeFirstOrThrow(() => new NotFoundException("Product not found"));
   }
 }
