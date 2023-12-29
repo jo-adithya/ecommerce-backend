@@ -42,7 +42,7 @@ export async function up(db: Kysely<any>): Promise<void> {
   await sql`
     CREATE TRIGGER update_version_trigger
     BEFORE UPDATE
-    ON order
+    ON "order"
     FOR EACH ROW
     EXECUTE PROCEDURE update_version();
   `.execute(db);
