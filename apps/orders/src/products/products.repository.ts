@@ -7,7 +7,7 @@ import { InjectKysely } from "@nx-micro-ecomm/server/kysely";
 import { Database } from "../database";
 import { Product } from "../models";
 import { CreateProductDto, GetProductByIdDto } from "./dtos";
-import { UpdateProductDto } from "./dtos/update-product-dto";
+import { UpdateProductByEventDto } from "./dtos/update-product-by-event-dto";
 
 @Injectable()
 export class ProductsRepository {
@@ -33,12 +33,13 @@ export class ProductsRepository {
       .executeTakeFirstOrThrow(() => new NotFoundException("Product not found"));
   }
 
-  async updateProduct(updateProductDto: UpdateProductDto): Promise<Product> | never {
+  async updateProductByEvent(updateProductDto: UpdateProductByEventDto): Promise<Product> | never {
     this.logger.log(`Updating Product: ${JSON.stringify(updateProductDto)}`);
     return this.db
       .updateTable("product")
       .set(updateProductDto)
       .where("id", "=", updateProductDto.id)
+      .where("version", "=", updateProductDto.version - 1)
       .returningAll()
       .executeTakeFirstOrThrow(() => new NotFoundException("Product not found"));
   }

@@ -10,9 +10,9 @@ describe("ProductsService", () => {
   const mockProductsRepository: Partial<jest.Mocked<ProductsRepository>> = {
     createProduct: jest.fn((product) => Promise.resolve(product)),
     getProductById: jest.fn(),
-    updateProduct: jest.fn(),
+    updateProductByEvent: jest.fn(),
   };
-  const mockProduct = { id: "1", title: "Product #1", price: 20, quantity: 1 };
+  const mockProduct = { id: "1", title: "Product #1", price: 20, quantity: 1, version: 0 };
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -62,16 +62,25 @@ describe("ProductsService", () => {
         title: "Product #1",
         price: 20,
         quantity: 1,
+        version: 1,
       };
-      mockProductsRepository.updateProduct.mockResolvedValueOnce(mockUpdateProductDto);
-      const product = await service.updateProduct(mockUpdateProductDto);
+      mockProductsRepository.updateProductByEvent.mockResolvedValueOnce(mockUpdateProductDto);
+      const product = await service.updateProductByEvent(mockUpdateProductDto);
       expect(product).toEqual(mockUpdateProductDto);
     });
 
     it("should throw an error if product not found", async () => {
-      const mockUpdateProductDto = { id: "1", title: "Product #1", price: 20, quantity: 1 };
-      mockProductsRepository.updateProduct.mockRejectedValueOnce(new NotFoundException());
-      await expect(service.updateProduct(mockUpdateProductDto)).rejects.toThrow(NotFoundException);
+      const mockUpdateProductDto = {
+        id: "1",
+        title: "Product #1",
+        price: 20,
+        quantity: 1,
+        version: 1,
+      };
+      mockProductsRepository.updateProductByEvent.mockRejectedValueOnce(new NotFoundException());
+      await expect(service.updateProductByEvent(mockUpdateProductDto)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });
