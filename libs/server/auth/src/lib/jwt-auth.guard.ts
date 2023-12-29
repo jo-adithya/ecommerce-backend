@@ -6,7 +6,6 @@ import { UserDto } from "./user.dto";
 export class JwtAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    console.log("COOKIES: ", JSON.stringify(request.cookies));
     const jwt = request.cookies.accessToken;
     if (!jwt) {
       throw new UnauthorizedException("You must be logged in to access this resource.");
