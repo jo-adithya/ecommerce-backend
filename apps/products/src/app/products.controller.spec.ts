@@ -15,6 +15,7 @@ describe("ProductsController", () => {
   const mockProduct = {
     title: "Product #1",
     price: 20,
+    quantity: 1,
   };
 
   const findOne = (_id: string) => {
@@ -106,7 +107,7 @@ describe("ProductsController", () => {
   describe("update", () => {
     it("should update a product", async () => {
       const product = await controller.create(mockProduct);
-      const updateProductDto = { title: "Product #2", price: 30 };
+      const updateProductDto = { title: "Product #2", price: 30, quantity: 2 };
       const updatedProduct = await controller.update(product._id.toString(), updateProductDto);
 
       expect(updatedProduct).toBeDefined();
@@ -118,7 +119,11 @@ describe("ProductsController", () => {
 
     it("should throw an error if the product does not exist", async () => {
       await expect(
-        controller.update(new Types.ObjectId().toString(), { title: "Product #2", price: 30 }),
+        controller.update(new Types.ObjectId().toString(), {
+          title: "Product #2",
+          price: 30,
+          quantity: 2,
+        }),
       ).rejects.toThrow(NotFoundException);
     });
   });

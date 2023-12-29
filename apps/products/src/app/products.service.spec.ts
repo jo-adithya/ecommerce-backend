@@ -15,7 +15,7 @@ describe("ProductsService", () => {
   let mockProductCreatedPublisher: Partial<ProductCreatedPublisherService>;
   let mockProductUpdatedPublisher: Partial<ProductUpdatedPublisherService>;
 
-  const mockProduct = { title: "Product #1", price: 20 };
+  const mockProduct = { title: "Product #1", price: 20, quantity: 1 };
 
   const findOne = (filterQuery: FilterQuery<Product>) => {
     const product = products.find((p) => {
@@ -121,7 +121,7 @@ describe("ProductsService", () => {
   describe("update", () => {
     it("should update a product", async () => {
       const product = await service.create(mockProduct);
-      const updateProductDto = { title: "Product #2", price: 30 };
+      const updateProductDto = { title: "Product #2", price: 30, quantity: 2 };
       const updatedProduct = await service.update(product._id.toString(), updateProductDto);
 
       expect(updatedProduct).toBeDefined();
@@ -135,9 +135,9 @@ describe("ProductsService", () => {
     });
 
     it("should throw an error if the product does not exist", async () => {
-      await expect(service.update("1", { title: "Product #2", price: 20 })).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.update("1", { title: "Product #2", price: 20, quantity: 1 }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
