@@ -4,14 +4,14 @@ import { Injectable } from "@nestjs/common";
 
 import {
   InjectClient,
-  ProductCreatedEvent,
+  OrderCreatedEvent,
   PublisherService,
   Subject,
 } from "@nx-micro-ecomm/server/nats-streaming";
 
 @Injectable()
-export class ProductCreatedPublisherService extends PublisherService<ProductCreatedEvent> {
+export class OrderCreatedPublisherService extends PublisherService<OrderCreatedEvent> {
   constructor(@InjectClient() client: Stan) {
-    super(client, { subject: Subject.ProductCreated });
+    super(client, { subject: Subject.OrderCreated });
   }
 }

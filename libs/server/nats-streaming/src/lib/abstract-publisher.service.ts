@@ -2,7 +2,7 @@ import { Stan } from "node-nats-streaming";
 
 import { Event } from "./events";
 
-export abstract class AbstractPublisherService<T extends Event> {
+export class PublisherService<T extends Event> {
   private readonly subject: T["subject"];
 
   constructor(
