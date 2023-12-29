@@ -2,7 +2,7 @@ import { Message, Stan } from "node-nats-streaming";
 
 import { OnModuleInit } from "@nestjs/common";
 
-import { Event } from "./nats-streaming.interface";
+import { Event } from "./events.interface";
 
 export abstract class AbstractListenerService<T extends Event> implements OnModuleInit {
   private readonly subject: T["subject"];
