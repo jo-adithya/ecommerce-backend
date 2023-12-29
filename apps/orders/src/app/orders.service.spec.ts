@@ -6,6 +6,7 @@ import { Test } from "@nestjs/testing";
 import { ordersConfig } from "@nx-micro-ecomm/server/config";
 import { OrderStatus } from "@nx-micro-ecomm/server/orders";
 
+import { OrderCancelledPublisherService, OrderCreatedPublisherService } from "../nats";
 import { ProductsService } from "../products";
 import { OrdersRepository } from "./orders.repository";
 import { OrdersService } from "./orders.service";
@@ -32,6 +33,12 @@ describe("OrdersService", () => {
   const mockProductsService: Partial<jest.Mocked<ProductsService>> = {
     getProductById: jest.fn(),
   };
+  const mockOrderCreatedPublisherService: Partial<jest.Mocked<OrderCreatedPublisherService>> = {
+    publish: jest.fn(),
+  };
+  const mockOrderCancelledPublisherService: Partial<jest.Mocked<OrderCancelledPublisherService>> = {
+    publish: jest.fn(),
+  };
   const mockOrdersConfig = {
     expirationSeconds: 15 * 60,
   };
@@ -43,6 +50,8 @@ describe("OrdersService", () => {
         { provide: OrdersRepository, useValue: mockOrdersRepository },
         { provide: ProductsService, useValue: mockProductsService },
         { provide: ordersConfig.KEY, useValue: mockOrdersConfig },
+        { provide: OrderCreatedPublisherService, useValue: mockOrderCreatedPublisherService },
+        { provide: OrderCancelledPublisherService, useValue: mockOrderCancelledPublisherService },
       ],
     }).compile();
 
@@ -104,6 +113,7 @@ describe("OrdersService", () => {
 
       expect(orders.length).toEqual(1);
       expect(orders[0].userId).toEqual(mockUserId);
+      expect(mockOrderCreatedPublisherService.publish).toHaveBeenCalled();
     });
 
     it("should return an empty array if user has no order", async () => {
@@ -167,6 +177,7 @@ describe("OrdersService", () => {
       expect(order.userId).toEqual(mockUserId);
       expect(order.id).toEqual(mockOrderId);
       expect(order.status).toEqual(OrderStatus.Cancelled);
+      expect(mockOrderCancelledPublisherService.publish).toHaveBeenCalled();
     });
   });
 });

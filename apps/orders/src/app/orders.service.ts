@@ -5,6 +5,7 @@ import { ordersConfig } from "@nx-micro-ecomm/server/config";
 import { OrderStatus } from "@nx-micro-ecomm/server/orders";
 
 import { Order, Product } from "../models";
+import { OrderCancelledPublisherService, OrderCreatedPublisherService } from "../nats";
 import { ProductsService } from "../products";
 import { CreateOrderDto } from "./dtos";
 import { OrdersRepository } from "./orders.repository";
@@ -15,6 +16,8 @@ export class OrdersService {
     private readonly ordersRepository: OrdersRepository,
     private readonly productsService: ProductsService,
     @Inject(ordersConfig.KEY) private readonly ordersConfiguration: ConfigType<typeof ordersConfig>,
+    private readonly orderCreatedPublisherService: OrderCreatedPublisherService,
+    private readonly orderCancelledPublisherService: OrderCancelledPublisherService,
   ) {}
 
   async createOrder(userId: string, createOrderDto: CreateOrderDto): Promise<Order> | never {
@@ -37,7 +40,18 @@ export class OrdersService {
       productId: createOrderDto.productId,
     });
 
-    // TODO: Publish an order created event
+    // Publish an order created event
+    this.orderCreatedPublisherService.publish({
+      id: order.id,
+      status: order.status,
+      userId: order.userId,
+      expiresAt: order.expiresAt.toISOString(),
+      quantity: order.quantity,
+      product: {
+        id: product.id,
+        price: product.price,
+      },
+    });
 
     return order;
   }
@@ -51,7 +65,18 @@ export class OrdersService {
   }
 
   async cancelOrder(userId: string, orderId: string): Promise<Order> | never {
-    return this.ordersRepository.cancelOrder(userId, orderId);
+    const order = await this.ordersRepository.cancelOrder(userId, orderId);
+
+    // Publish an order cancelled event
+    this.orderCancelledPublisherService.publish({
+      id: order.id,
+      quantity: order.quantity,
+      product: {
+        id: order.productId,
+      },
+    });
+
+    return order;
   }
 
   async checkProductAvailability(product: Product, quantity: number) {

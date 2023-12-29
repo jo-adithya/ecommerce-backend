@@ -10,6 +10,7 @@ import { KyselyModule } from "@nx-micro-ecomm/server/kysely";
 import { LoggerModule } from "@nx-micro-ecomm/server/logger";
 import { NatsStreamingModule } from "@nx-micro-ecomm/server/nats-streaming";
 
+import { OrderCancelledPublisherService, OrderCreatedPublisherService } from "../nats";
 import { ProductsModule } from "../products";
 import { OrdersController } from "./orders.controller";
 import { OrdersRepository } from "./orders.repository";
@@ -52,7 +53,12 @@ import { OrdersService } from "./orders.service";
     }),
   ],
   controllers: [OrdersController],
-  providers: [OrdersService, OrdersRepository],
+  providers: [
+    OrdersService,
+    OrdersRepository,
+    OrderCreatedPublisherService,
+    OrderCancelledPublisherService,
+  ],
 })
 export class OrdersModule {
   configure(consumer: MiddlewareConsumer) {

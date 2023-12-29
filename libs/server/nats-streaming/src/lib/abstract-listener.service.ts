@@ -2,9 +2,9 @@ import { Message, Stan } from "node-nats-streaming";
 
 import { OnModuleInit } from "@nestjs/common";
 
-import { Event } from "./events.interface";
+import { Event } from "./events";
 
-export abstract class AbstractListenerService<T extends Event> implements OnModuleInit {
+export abstract class ListenerService<T extends Event> implements OnModuleInit {
   private readonly subject: T["subject"];
   private readonly queueGroupName: string;
   protected ackWait = 5 * 1000;
