@@ -15,7 +15,12 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto): Promise<ProductDocument> | never {
     const product = await this.productsRepository.create({ ...createProductDto, userId: "1" });
-    this.productCreatedPublisher.publish({ ...product, id: product._id.toString() });
+    this.productCreatedPublisher.publish({
+      id: product._id.toString(),
+      title: product.title,
+      price: product.price,
+      quantity: product.quantity,
+    });
     return product;
   }
 
@@ -32,7 +37,12 @@ export class ProductsService {
       { _id },
       { $set: updateProductDto },
     );
-    this.productUpdatedPublisher.publish({ ...updatedProduct, id: updatedProduct._id.toString() });
+    this.productUpdatedPublisher.publish({
+      id: updatedProduct._id.toString(),
+      title: updatedProduct.title,
+      price: updatedProduct.price,
+      quantity: updatedProduct.quantity,
+    });
     return updatedProduct;
   }
 
