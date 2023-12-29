@@ -6,5 +6,6 @@ export interface ProductUpdatedEvent {
     id: string;
     title: string;
     price: number;
+    quantity: number;
   };
 }
