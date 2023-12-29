@@ -14,7 +14,7 @@ export class OrdersRepository {
 
   constructor(@InjectKysely() private readonly db: Kysely<Database>) {}
 
-  async createOrder(order: Omit<Order, "id">): Promise<Order> | never {
+  async createOrder(order: Omit<Order, "id" | "version">): Promise<Order> | never {
     this.logger.debug(`Creating order: ${JSON.stringify(order)}`);
     return this.db.insertInto("order").values(order).returningAll().executeTakeFirst();
   }

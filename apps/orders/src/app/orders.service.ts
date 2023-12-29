@@ -51,6 +51,7 @@ export class OrdersService {
         id: product.id,
         price: product.price,
       },
+      version: order.version,
     });
 
     return order;
@@ -74,6 +75,7 @@ export class OrdersService {
       product: {
         id: order.productId,
       },
+      version: order.version,
     });
 
     return order;

@@ -9,6 +9,7 @@ export const OrderSchema = object({
   expiresAt: date(),
   quantity: number([minValue(1)]),
   productId: string(),
+  version: number(),
 });
 
 export type Order = Output<typeof OrderSchema>;

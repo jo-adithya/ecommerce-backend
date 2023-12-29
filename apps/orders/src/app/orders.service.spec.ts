@@ -20,11 +20,12 @@ describe("OrdersService", () => {
     title: "Test",
     price: 10,
     quantity: 1,
+    version: 0,
   };
   const mockOrder = { productId: mockProduct.id, quantity: 1 };
   const mockOutOfStockOrder = { productId: mockProduct.id, quantity: 2 };
   const mockOrdersRepository: Partial<jest.Mocked<OrdersRepository>> = {
-    createOrder: jest.fn((document) => Promise.resolve({ ...document, id: "1" })),
+    createOrder: jest.fn((document) => Promise.resolve({ ...document, id: "1", version: 0 })),
     getAllOrders: jest.fn(),
     getOrderById: jest.fn(),
     getAllReservedOrdersByProductId: jest.fn(),
@@ -109,6 +110,7 @@ describe("OrdersService", () => {
           expiresAt: new Date(),
           quantity: mockOrder.quantity,
           productId: mockProduct.id,
+          version: 0,
         },
       ]);
 
@@ -145,6 +147,7 @@ describe("OrdersService", () => {
         expiresAt: new Date(),
         quantity: mockOrder.quantity,
         productId: mockProduct.id,
+        version: 0,
       });
 
       const order = await service.getOrderById(mockUserId, mockOrder.productId);
@@ -172,6 +175,7 @@ describe("OrdersService", () => {
         expiresAt: new Date(),
         quantity: mockOrder.quantity,
         productId: mockProduct.id,
+        version: 0,
       });
 
       const order = await service.cancelOrder(mockUserId, mockOrder.productId);

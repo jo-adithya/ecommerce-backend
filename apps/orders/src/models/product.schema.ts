@@ -5,6 +5,7 @@ export const ProductSchema = object({
   title: string(),
   price: number([minValue(1)]),
   quantity: number([minValue(1)]),
+  version: number(),
 });
 
 export type Product = Output<typeof ProductSchema>;

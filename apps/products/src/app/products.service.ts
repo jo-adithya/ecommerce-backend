@@ -16,6 +16,7 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto): Promise<ProductDocument> | never {
     const product = await this.productsRepository.create({ ...createProductDto, userId: "1" });
     this.productCreatedPublisher.publish({
+      version: product.version,
       id: product._id.toString(),
       title: product.title,
       price: product.price,
@@ -38,6 +39,7 @@ export class ProductsService {
       { $set: updateProductDto },
     );
     this.productUpdatedPublisher.publish({
+      version: updatedProduct.version,
       id: updatedProduct._id.toString(),
       title: updatedProduct.title,
       price: updatedProduct.price,

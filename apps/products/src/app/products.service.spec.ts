@@ -82,8 +82,10 @@ describe("ProductsService", () => {
       expect(product.title).toEqual(mockProduct.title);
       expect(product.price).toEqual(mockProduct.price);
       expect(mockProductCreatedPublisher.publish).toHaveBeenCalledWith({
-        ...product,
         id: product._id.toString(),
+        title: product.title,
+        price: product.price,
+        quantity: product.quantity,
       });
     });
   });
@@ -129,8 +131,10 @@ describe("ProductsService", () => {
       expect(updatedProduct.price).toEqual(updateProductDto.price);
 
       expect(mockProductUpdatedPublisher.publish).toHaveBeenCalledWith({
-        ...updatedProduct,
         id: product._id.toString(),
+        title: updatedProduct.title,
+        price: updatedProduct.price,
+        quantity: updatedProduct.quantity,
       });
     });
 

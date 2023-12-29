@@ -6,7 +6,7 @@ export abstract class AbstractRepository<T> {
   protected abstract readonly logger: Logger;
   constructor(protected readonly model: Model<T>) {}
 
-  async create(document: Omit<T, "_id">): Promise<FlattenMaps<T>> {
+  async create(document: Omit<T, "_id" | "version" | "__v">): Promise<FlattenMaps<T>> {
     this.logger.debug(`Creating ${this.model.modelName}: ${JSON.stringify(document)}`);
     const createdDocument = new this.model(document);
     return (await createdDocument.save()).toJSON();
