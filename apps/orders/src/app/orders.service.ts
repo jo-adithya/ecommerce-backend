@@ -4,7 +4,7 @@ import { ConfigType } from "@nestjs/config";
 import { ordersConfig } from "@nx-micro-ecomm/server/config";
 import { OrderStatus } from "@nx-micro-ecomm/server/orders";
 
-import { Order, Product } from "../models";
+import { Order } from "../models";
 import { OrderCancelledPublisherService, OrderCreatedPublisherService } from "../nats";
 import { ProductsService } from "../products";
 import { CreateOrderDto } from "./dtos";
@@ -25,7 +25,9 @@ export class OrdersService {
     const product = await this.productsService.getProductById({ id: createOrderDto.productId });
 
     // Make sure that the product has enough quantity available
-    await this.checkProductAvailability(product, createOrderDto.quantity);
+    if (createOrderDto.quantity > product.quantity) {
+      throw new BadRequestException("Product is out of stock");
+    }
 
     // Calculate the expiration date of the order (15 minutes)
     const expiration = new Date();
@@ -38,6 +40,12 @@ export class OrdersService {
       expiresAt: expiration,
       quantity: createOrderDto.quantity,
       productId: createOrderDto.productId,
+    });
+
+    // Decrease the quantity of the product
+    await this.productsService.decreaseProductQuantity({
+      id: product.id,
+      quantity: createOrderDto.quantity,
     });
 
     // Publish an order created event
@@ -79,12 +87,5 @@ export class OrdersService {
     });
 
     return order;
-  }
-
-  async checkProductAvailability(product: Product, quantity: number) {
-    const orders = await this.ordersRepository.getAllReservedOrdersByProductId(product.id);
-    if (orders.reduce((acc, order) => acc + order.quantity, 0) + quantity > product.quantity) {
-      throw new BadRequestException("Product is out of stock");
-    }
   }
 }

@@ -35,18 +35,6 @@ export class OrdersRepository {
       .executeTakeFirstOrThrow(() => new NotFoundException("Order not found"));
   }
 
-  async getAllReservedOrdersByProductId(
-    productId: string,
-  ): Promise<Pick<Order, "id" | "quantity">[]> | never {
-    this.logger.debug(`Finding all orders except cancelled`);
-    return this.db
-      .selectFrom("order")
-      .select(["id", "quantity"])
-      .where("productId", "=", productId)
-      .where("status", "!=", OrderStatus.Cancelled)
-      .execute();
-  }
-
   async cancelOrder(userId: string, orderId: string): Promise<Order> | never {
     this.logger.debug(`Cancelling order by order id: ${orderId}`);
     return this.db

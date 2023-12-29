@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
 import { Product } from "../models";
-import { CreateProductDto, GetProductByIdDto } from "./dtos";
+import { CreateProductDto, DecreaseProductQuantityDto, GetProductByIdDto } from "./dtos";
 import { UpdateProductByEventDto } from "./dtos/update-product-by-event-dto";
 import { ProductsRepository } from "./products.repository";
 
@@ -19,5 +19,11 @@ export class ProductsService {
 
   updateProductByEvent(updateProductDto: UpdateProductByEventDto): Promise<Product> | never {
     return this.productsRepository.updateProductByEvent(updateProductDto);
+  }
+
+  decreaseProductQuantity(
+    decreaseProductQuantityDto: DecreaseProductQuantityDto,
+  ): Promise<Product> | never {
+    return this.productsRepository.decreaseProductQuantity(decreaseProductQuantityDto);
   }
 }

@@ -28,11 +28,11 @@ describe("OrdersService", () => {
     createOrder: jest.fn((document) => Promise.resolve({ ...document, id: "1", version: 0 })),
     getAllOrders: jest.fn(),
     getOrderById: jest.fn(),
-    getAllReservedOrdersByProductId: jest.fn(),
     cancelOrder: jest.fn(),
   };
   const mockProductsService: Partial<jest.Mocked<ProductsService>> = {
     getProductById: jest.fn(),
+    decreaseProductQuantity: jest.fn(),
   };
   const mockOrderCreatedPublisherService: Partial<jest.Mocked<OrderCreatedPublisherService>> = {
     publish: jest.fn(),
@@ -77,17 +77,16 @@ describe("OrdersService", () => {
 
     it("should throw an error if product is out of stock", async () => {
       mockProductsService.getProductById.mockResolvedValueOnce(mockProduct);
-      mockOrdersRepository.getAllReservedOrdersByProductId.mockResolvedValueOnce([]);
 
       await expect(service.createOrder(mockUserId, mockOutOfStockOrder)).rejects.toThrow(
         BadRequestException,
       );
       expect(mockOrderCreatedPublisherService.publish).not.toHaveBeenCalled();
+      expect(mockProductsService.decreaseProductQuantity).not.toHaveBeenCalled();
     });
 
     it("should successfully reserve a product", async () => {
       mockProductsService.getProductById.mockResolvedValueOnce(mockProduct);
-      mockOrdersRepository.getAllReservedOrdersByProductId.mockResolvedValueOnce([]);
 
       const order = await service.createOrder(mockUserId, mockOrder);
 
@@ -97,6 +96,10 @@ describe("OrdersService", () => {
       expect(order.expiresAt).toBeDefined();
       expect(order.quantity).toEqual(mockOrder.quantity);
       expect(mockOrderCreatedPublisherService.publish).toHaveBeenCalled();
+      expect(mockProductsService.decreaseProductQuantity).toHaveBeenCalledWith({
+        id: mockOrder.productId,
+        quantity: mockOrder.quantity,
+      });
     });
   });
 
