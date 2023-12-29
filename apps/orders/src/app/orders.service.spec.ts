@@ -71,6 +71,7 @@ describe("OrdersService", () => {
       mockProductsService.getProductById.mockRejectedValueOnce(new NotFoundException());
 
       await expect(service.createOrder(mockUserId, mockOrder)).rejects.toThrow(NotFoundException);
+      expect(mockOrderCreatedPublisherService.publish).not.toHaveBeenCalled();
     });
 
     it("should throw an error if product is out of stock", async () => {
@@ -80,6 +81,7 @@ describe("OrdersService", () => {
       await expect(service.createOrder(mockUserId, mockOutOfStockOrder)).rejects.toThrow(
         BadRequestException,
       );
+      expect(mockOrderCreatedPublisherService.publish).not.toHaveBeenCalled();
     });
 
     it("should successfully reserve a product", async () => {
@@ -93,6 +95,7 @@ describe("OrdersService", () => {
       expect(order.status).toEqual(OrderStatus.Created);
       expect(order.expiresAt).toBeDefined();
       expect(order.quantity).toEqual(mockOrder.quantity);
+      expect(mockOrderCreatedPublisherService.publish).toHaveBeenCalled();
     });
   });
 
@@ -113,7 +116,6 @@ describe("OrdersService", () => {
 
       expect(orders.length).toEqual(1);
       expect(orders[0].userId).toEqual(mockUserId);
-      expect(mockOrderCreatedPublisherService.publish).toHaveBeenCalled();
     });
 
     it("should return an empty array if user has no order", async () => {
