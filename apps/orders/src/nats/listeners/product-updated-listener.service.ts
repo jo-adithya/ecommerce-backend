@@ -22,7 +22,7 @@ export class ProductUpdatedListenerService extends ListenerService<ProductUpdate
   }
 
   async onMessage(data: ProductUpdatedEvent["data"], msg: Message) {
-    await this.productsService.updateProduct(data);
+    await this.productsService.updateProductByEvent(data);
     msg.ack();
   }
 }
