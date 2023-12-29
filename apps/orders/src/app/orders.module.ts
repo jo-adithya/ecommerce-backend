@@ -10,7 +10,12 @@ import { KyselyModule } from "@nx-micro-ecomm/server/kysely";
 import { LoggerModule } from "@nx-micro-ecomm/server/logger";
 import { NatsStreamingModule } from "@nx-micro-ecomm/server/nats-streaming";
 
-import { OrderCancelledPublisherService, OrderCreatedPublisherService } from "../nats";
+import {
+  OrderCancelledPublisherService,
+  OrderCreatedPublisherService,
+  ProductCreatedListenerService,
+} from "../nats";
+import { ProductUpdatedListenerService } from "../nats/listeners/product-updated-listener.service";
 import { ProductsModule } from "../products";
 import { OrdersController } from "./orders.controller";
 import { OrdersRepository } from "./orders.repository";
@@ -58,6 +63,8 @@ import { OrdersService } from "./orders.service";
     OrdersRepository,
     OrderCreatedPublisherService,
     OrderCancelledPublisherService,
+    ProductCreatedListenerService,
+    ProductUpdatedListenerService,
   ],
 })
 export class OrdersModule {
