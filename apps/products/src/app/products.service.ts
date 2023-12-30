@@ -33,7 +33,11 @@ export class ProductsService {
     return this.productsRepository.findOne({ _id });
   }
 
-  async update(_id: string, updateProductDto: UpdateProductDto): Promise<ProductDocument> | never {
+  async update(
+    _id: string,
+    updateProductDto: UpdateProductDto,
+    flags = { orderCreated: false },
+  ): Promise<ProductDocument> | never {
     const updatedProduct = await this.productsRepository.findOneAndUpdate(
       { _id },
       { $set: updateProductDto },
@@ -44,6 +48,7 @@ export class ProductsService {
       title: updatedProduct.title,
       price: updatedProduct.price,
       quantity: updatedProduct.quantity,
+      orderCreated: flags.orderCreated,
     });
     return updatedProduct;
   }

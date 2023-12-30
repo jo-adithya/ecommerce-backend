@@ -10,8 +10,7 @@ import { MongooseModule } from "@nx-micro-ecomm/server/mongoose";
 import { NatsStreamingModule } from "@nx-micro-ecomm/server/nats-streaming";
 
 import { Product, ProductSchema } from "../models/product.schema";
-import { ProductCreatedPublisherService } from "../nats/product-created-publisher.service";
-import { ProductUpdatedPublisherService } from "../nats/product-updated-publisher.service";
+import { ProductCreatedPublisherService, ProductUpdatedPublisherService } from "../nats";
 import { ProductsController } from "./products.controller";
 import { ProductsRepository } from "./products.repository";
 import { ProductsService } from "./products.service";

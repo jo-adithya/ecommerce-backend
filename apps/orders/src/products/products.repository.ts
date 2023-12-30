@@ -6,7 +6,12 @@ import { InjectKysely } from "@nx-micro-ecomm/server/kysely";
 
 import { Database } from "../database";
 import { Product } from "../models";
-import { CreateProductDto, DecreaseProductQuantityDto, GetProductByIdDto } from "./dtos";
+import {
+  CreateProductDto,
+  DecreaseProductQuantityDto,
+  GetProductByIdDto,
+  UpdateProductVersionDto,
+} from "./dtos";
 import { UpdateProductByEventDto } from "./dtos/update-product-by-event-dto";
 
 @Injectable()
@@ -54,6 +59,18 @@ export class ProductsRepository {
         quantity: eb("quantity", "-", decreaseProductQuantityDto.quantity),
       }))
       .where("id", "=", decreaseProductQuantityDto.id)
+      .returningAll()
+      .executeTakeFirstOrThrow(() => new NotFoundException("Product not found"));
+  }
+
+  async updateProductVersion(
+    updateProductVersionDto: UpdateProductVersionDto,
+  ): Promise<Product> | never {
+    this.logger.log(`Updating product version: ${JSON.stringify(updateProductVersionDto)}`);
+    return this.db
+      .updateTable("product")
+      .set({ version: updateProductVersionDto.version })
+      .where("id", "=", updateProductVersionDto.id)
       .returningAll()
       .executeTakeFirstOrThrow(() => new NotFoundException("Product not found"));
   }

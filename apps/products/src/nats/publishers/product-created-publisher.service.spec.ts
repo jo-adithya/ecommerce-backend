@@ -38,6 +38,8 @@ describe("ProductCreatedPublisherService", () => {
         title: "Product #1",
         price: 20,
         quantity: 1,
+        version: 1,
+        orderCreated: false,
       };
 
       service.publish(mockProduct);

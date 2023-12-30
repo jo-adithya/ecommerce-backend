@@ -13,6 +13,7 @@ describe("ProductUpdatedListenerService", () => {
   const mockNatsClient: Partial<jest.Mocked<Stan>> = {};
   const mockProductService: Partial<jest.Mocked<ProductsService>> = {
     updateProductByEvent: jest.fn(),
+    updateProductVersion: jest.fn(),
   };
   const mockMsg: Partial<jest.Mocked<Message>> = {
     ack: jest.fn(),
@@ -23,6 +24,7 @@ describe("ProductUpdatedListenerService", () => {
     title: "Product #1",
     price: 20,
     quantity: 1,
+    orderCreated: false,
   };
 
   beforeAll(async () => {
@@ -50,6 +52,18 @@ describe("ProductUpdatedListenerService", () => {
       mockProductService.updateProductByEvent.mockResolvedValueOnce(mockEventData);
       await service.onMessage(mockEventData, mockMsg as Message);
       expect(mockProductService.updateProductByEvent).toHaveBeenCalledWith(mockEventData);
+      expect(mockProductService.updateProductVersion).not.toHaveBeenCalled();
+      expect(mockMsg.ack).toHaveBeenCalled();
+    });
+
+    it("should attempt to only update a product version if orderCreated flag is true", async () => {
+      mockProductService.updateProductVersion.mockResolvedValueOnce(mockEventData);
+      await service.onMessage({ ...mockEventData, orderCreated: true }, mockMsg as Message);
+      expect(mockProductService.updateProductByEvent).not.toHaveBeenCalled();
+      expect(mockProductService.updateProductVersion).toHaveBeenCalledWith({
+        id: mockEventData.id,
+        version: mockEventData.version,
+      });
       expect(mockMsg.ack).toHaveBeenCalled();
     });
 

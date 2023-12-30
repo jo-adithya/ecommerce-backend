@@ -8,5 +8,6 @@ export interface ProductUpdatedEvent {
     title: string;
     price: number;
     quantity: number;
+    orderCreated: boolean;
   };
 }

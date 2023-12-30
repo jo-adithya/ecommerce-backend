@@ -22,7 +22,11 @@ export class ProductUpdatedListenerService extends ListenerService<ProductUpdate
   }
 
   async onMessage(data: ProductUpdatedEvent["data"], msg: Message) {
-    await this.productsService.updateProductByEvent(data);
+    if (data.orderCreated) {
+      await this.productsService.updateProductVersion({ id: data.id, version: data.version });
+    } else {
+      await this.productsService.updateProductByEvent(data);
+    }
     msg.ack();
   }
 }
