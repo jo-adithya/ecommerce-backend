@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-import { Module } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
 import { ConfigModule, ConfigType } from "@nestjs/config";
 
 import { bullConfig, natsConfig } from "@nx-micro-ecomm/server/config";
@@ -9,8 +9,9 @@ import { NatsStreamingModule } from "@nx-micro-ecomm/server/nats-streaming";
 
 import { BullModule } from "../bull";
 import { OrderCreatedListenerService } from "../nats/listeners";
-import { ExpirationCompletePublisherService } from "../nats/publishers/expiration-complete-publisher.service";
+import { ExpirationCompletePublisherService } from "../nats/publishers";
 
+@Global()
 @Module({
   imports: [
     BullModule,

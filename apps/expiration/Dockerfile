@@ -25,7 +25,6 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN pnpm build db-migrations
 RUN pnpm build expiration
 
 
