@@ -19,6 +19,7 @@ export class NatsStreamingModule {
     };
 
     return {
+      global: true,
       module: NatsStreamingModule,
       providers: [clientProvider],
       exports: [clientProvider],
@@ -42,6 +43,7 @@ export class NatsStreamingModule {
     };
 
     return {
+      global: true,
       module: NatsStreamingModule,
       providers: [asyncOptionsProvider, clientProvider],
       imports: options.imports,
