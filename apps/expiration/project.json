@@ -1,0 +1,66 @@
+{
+  "name": "expiration",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/expiration/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/expiration",
+        "main": "apps/expiration/src/main.ts",
+        "tsConfig": "apps/expiration/tsconfig.app.json",
+        "assets": ["apps/expiration/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/expiration/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "buildLibsFromSrc": true,
+          "generatePackageJson": true
+        },
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "generatePackageJson": true,
+          "buildLibsFromSrc": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "expiration:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "expiration:build:development"
+        },
+        "production": {
+          "buildTarget": "expiration:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/expiration/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/expiration/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
