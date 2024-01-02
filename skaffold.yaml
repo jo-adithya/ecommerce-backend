@@ -32,6 +32,16 @@ build:
             dest: .
           - src: 'libs/server/**/*.ts'
             dest: .
+    - image: joadithya/ecomm-expiration
+      context: .
+      docker:
+        dockerfile: apps/expiration/Dockerfile
+      sync:
+        manual:
+          - src: 'apps/expiration/src/**/*.ts'
+            dest: .
+          - src: 'libs/server/**/*.ts'
+            dest: .
   local:
     push: false
 manifests:

@@ -21,5 +21,8 @@
 	"eslint.enable": true,
 	"[yaml]": {
 		"editor.defaultFormatter": "redhat.vscode-yaml"
+	},
+	"yaml.schemas": {
+		"kubernetes://schema/v1@service": "file:///Users/jonathanadithya/Documents/ProgrammingCourses/Projects/nx-micro-ecomm/infra/k8s/expiration-redis.yaml"
 	}
 }
