@@ -22,7 +22,13 @@ export abstract class ListenerService<T extends Event> implements OnModuleInit {
   }
 
   onModuleInit() {
-    this.listen();
+    try {
+      this.listen();
+    } catch (error) {
+      this.client.on("connect", () => {
+        this.listen();
+      });
+    }
   }
 
   private listen() {

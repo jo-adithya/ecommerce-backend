@@ -22,12 +22,14 @@ export class Product extends AbstractDocument {
 
   @Prop({ type: [String], default: [] })
   orderIds: string[];
-
-  @Prop({ required: true })
-  version: number;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
+
+ProductSchema.pre("save", function (next) {
+  this.increment();
+  return next();
+});
 
 ProductSchema.pre("findOneAndUpdate", function (next) {
   this.findOneAndUpdate(this.getFilter(), { $inc: { version: 1 } });

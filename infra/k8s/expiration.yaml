@@ -23,6 +23,6 @@ spec:
             - name: NATS_CLUSTER_ID
               value: ecomm
             - name: NATS_URL
-              value: http://nats-srv:4222
+              value: http://nats-svc:4222
             - name: REDIS_HOST
               value: expiration-redis-svc

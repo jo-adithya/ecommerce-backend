@@ -6,7 +6,9 @@ export abstract class AbstractRepository<T> {
   protected abstract readonly logger: Logger;
   constructor(protected readonly model: Model<T>) {}
 
-  async create(document: Omit<T, "_id" | "version" | "__v">): Promise<FlattenMaps<T>> {
+  async create(
+    document: Omit<T, "_id" | "version" | "__v">,
+  ): Promise<FlattenMaps<T & { version: number }>> {
     this.logger.debug(`Creating ${this.model.modelName}: ${JSON.stringify(document)}`);
     const createdDocument = new this.model(document);
     return (await createdDocument.save()).toJSON();
@@ -15,7 +17,7 @@ export abstract class AbstractRepository<T> {
   async findOne(
     filterQuery: FilterQuery<T>,
     projection: ProjectionFields<T> = {},
-  ): Promise<FlattenMaps<T>> {
+  ): Promise<FlattenMaps<T & { version: number }>> {
     this.logger.debug(`Finding one ${this.model.modelName}: ${JSON.stringify(filterQuery)}`);
     const document = await this.model.findOne(filterQuery).select(projection).lean().exec();
     this.assertDocumentExists(document, filterQuery);
@@ -50,7 +52,7 @@ export abstract class AbstractRepository<T> {
   async findOneAndDelete(
     filterQuery: FilterQuery<T>,
     projection: ProjectionFields<T> = {},
-  ): Promise<FlattenMaps<T>> {
+  ): Promise<FlattenMaps<T & { version: number }>> {
     this.logger.debug(
       `Finding one and deleting ${this.model.modelName}: ${JSON.stringify(filterQuery)}`,
     );
@@ -66,7 +68,7 @@ export abstract class AbstractRepository<T> {
   protected assertDocumentExists(
     document: FlattenMaps<T> | null,
     filterQuery: FilterQuery<T>,
-  ): asserts document is FlattenMaps<T> {
+  ): asserts document is FlattenMaps<T & { version: number }> {
     if (!document) {
       this.logger.error(`Document not found for filter query: ${JSON.stringify(filterQuery)}`);
       throw new NotFoundException("Document not found");
