@@ -37,7 +37,7 @@ describe("ProductsController", () => {
 
       update: jest.fn(async (_id, updateProductDto) => {
         const product = await findOne(_id);
-        const updatedProduct = { ...product, ...updateProductDto } as ProductDocument;
+        const updatedProduct = { ...product, ...updateProductDto.$set } as ProductDocument;
         products = products.map((p) => (p._id.toString() === _id ? updatedProduct : p));
         return Promise.resolve(updatedProduct);
       }),

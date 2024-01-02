@@ -20,7 +20,10 @@ export class Product extends AbstractDocument {
   @Prop({ required: true, min: 0 })
   quantity: number;
 
-  @Prop()
+  @Prop({ type: [String], default: [] })
+  orderIds: string[];
+
+  @Prop({ required: true })
   version: number;
 }
 

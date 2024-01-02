@@ -123,18 +123,22 @@ describe("ProductsService", () => {
   describe("update", () => {
     it("should update a product", async () => {
       const product = await service.create(mockProduct);
-      const updateProductDto = { title: "Product #2", price: 30, quantity: 2 };
+      const updateProductDto = {
+        $set: { title: "Product #2", price: 30, quantity: 2, version: 1 },
+      };
       const updatedProduct = await service.update(product._id.toString(), updateProductDto);
 
       expect(updatedProduct).toBeDefined();
-      expect(updatedProduct.title).toEqual(updateProductDto.title);
-      expect(updatedProduct.price).toEqual(updateProductDto.price);
+      expect(updatedProduct.title).toEqual(updateProductDto.$set.title);
+      expect(updatedProduct.price).toEqual(updateProductDto.$set.price);
 
       expect(mockProductUpdatedPublisher.publish).toHaveBeenCalledWith({
         id: product._id.toString(),
         title: updatedProduct.title,
         price: updatedProduct.price,
         quantity: updatedProduct.quantity,
+        version: updatedProduct.version,
+        orderCreated: false,
       });
     });
 
