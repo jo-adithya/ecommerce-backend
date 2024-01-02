@@ -11,12 +11,10 @@ import {
 } from "@nestjs/common";
 
 import { CurrentUser, JwtAuthGuard, UserDto } from "@nx-micro-ecomm/server/auth";
-import { Serialize } from "@nx-micro-ecomm/server/interceptors";
 
-import { CreateOrderDto, OrderDto } from "./dtos";
+import { CreateOrderDto } from "./dtos";
 import { OrdersService } from "./orders.service";
 
-@Serialize(OrderDto)
 @UseGuards(JwtAuthGuard)
 @Controller("orders")
 export class OrdersController {
@@ -41,7 +39,7 @@ export class OrdersController {
   }
 
   @Patch(":id")
-  cancelOrder(@CurrentUser() user: UserDto, @Param("id") orderId: string) {
-    return this.ordersService.cancelOrder(user.id, orderId);
+  cancelOrder(@Param("id") orderId: string) {
+    return this.ordersService.cancelOrder(orderId);
   }
 }

@@ -5,7 +5,7 @@ import { ordersConfig } from "@nx-micro-ecomm/server/config";
 import { OrderStatus } from "@nx-micro-ecomm/server/orders";
 
 import { Order } from "../models";
-import { OrderCancelledPublisherService, OrderCreatedPublisherService } from "../nats";
+import { OrderCancelledPublisherService, OrderCreatedPublisherService } from "../nats/publishers";
 import { ProductsService } from "../products";
 import { CreateOrderDto } from "./dtos";
 import { OrdersRepository } from "./orders.repository";
@@ -73,18 +73,29 @@ export class OrdersService {
     return this.ordersRepository.getOrderById(userId, orderId);
   }
 
-  async cancelOrder(userId: string, orderId: string): Promise<Order> | never {
-    const order = await this.ordersRepository.cancelOrder(userId, orderId);
+  async cancelOrder(orderId: string, options = { awaitPublish: false }): Promise<Order> | never {
+    const order = await this.ordersRepository.cancelOrder(orderId);
 
     // Publish an order cancelled event
-    this.orderCancelledPublisherService.publish({
-      id: order.id,
-      quantity: order.quantity,
-      product: {
-        id: order.productId,
-      },
-      version: order.version,
-    });
+    if (options.awaitPublish) {
+      await this.orderCancelledPublisherService.publish({
+        id: order.id,
+        quantity: order.quantity,
+        product: {
+          id: order.productId,
+        },
+        version: order.version,
+      });
+    } else {
+      this.orderCancelledPublisherService.publish({
+        id: order.id,
+        quantity: order.quantity,
+        product: {
+          id: order.productId,
+        },
+        version: order.version,
+      });
+    }
 
     return order;
   }

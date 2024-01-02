@@ -11,11 +11,11 @@ import { LoggerModule } from "@nx-micro-ecomm/server/logger";
 import { NatsStreamingModule } from "@nx-micro-ecomm/server/nats-streaming";
 
 import {
-  OrderCancelledPublisherService,
-  OrderCreatedPublisherService,
+  ExpirationCompleteListenerService,
   ProductCreatedListenerService,
-} from "../nats";
-import { ProductUpdatedListenerService } from "../nats/listeners/product-updated-listener.service";
+  ProductUpdatedListenerService,
+} from "../nats/listeners";
+import { OrderCancelledPublisherService, OrderCreatedPublisherService } from "../nats/publishers";
 import { ProductsModule } from "../products";
 import { OrdersController } from "./orders.controller";
 import { OrdersRepository } from "./orders.repository";
@@ -65,6 +65,7 @@ import { OrdersService } from "./orders.service";
     OrderCancelledPublisherService,
     ProductCreatedListenerService,
     ProductUpdatedListenerService,
+    ExpirationCompleteListenerService,
   ],
 })
 export class OrdersModule {

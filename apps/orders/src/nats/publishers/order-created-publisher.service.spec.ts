@@ -44,6 +44,7 @@ describe("OrderCreatedPublisherService", () => {
           id: "123",
           price: 10,
         },
+        version: 1,
       };
 
       service.publish(mockOrder);

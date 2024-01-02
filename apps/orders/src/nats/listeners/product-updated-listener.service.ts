@@ -25,7 +25,13 @@ export class ProductUpdatedListenerService extends ListenerService<ProductUpdate
     if (data.orderCreated) {
       await this.productsService.updateProductVersion({ id: data.id, version: data.version });
     } else {
-      await this.productsService.updateProductByEvent(data);
+      await this.productsService.updateProductByEvent({
+        id: data.id,
+        title: data.title,
+        price: data.price,
+        version: data.version,
+        quantity: data.quantity,
+      });
     }
     msg.ack();
   }

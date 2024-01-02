@@ -164,9 +164,7 @@ describe("OrdersService", () => {
     it("should throw an error if order does not exist or user id is not valid", async () => {
       mockOrdersRepository.cancelOrder.mockRejectedValueOnce(new NotFoundException());
 
-      await expect(service.cancelOrder(mockUserId, mockOrder.productId)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(service.cancelOrder(mockOrder.productId)).rejects.toThrow(NotFoundException);
     });
 
     it("should return an order if it exists", async () => {
@@ -181,7 +179,7 @@ describe("OrdersService", () => {
         version: 0,
       });
 
-      const order = await service.cancelOrder(mockUserId, mockOrder.productId);
+      const order = await service.cancelOrder(mockOrder.productId);
 
       expect(order.userId).toEqual(mockUserId);
       expect(order.id).toEqual(mockOrderId);

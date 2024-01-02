@@ -35,7 +35,7 @@ export class OrdersRepository {
       .executeTakeFirstOrThrow(() => new NotFoundException("Order not found"));
   }
 
-  async cancelOrder(userId: string, orderId: string): Promise<Order> | never {
+  async cancelOrder(orderId: string): Promise<Order> | never {
     this.logger.debug(`Cancelling order by order id: ${orderId}`);
     return this.db
       .updateTable("order")

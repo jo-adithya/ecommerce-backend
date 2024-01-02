@@ -40,6 +40,7 @@ describe("OrderCancelledPublisherService", () => {
       const mockOrder = {
         id: "123",
         quantity: 1,
+        version: 1,
         product: {
           id: "123",
         },
