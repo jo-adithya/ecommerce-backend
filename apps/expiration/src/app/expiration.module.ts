@@ -9,6 +9,7 @@ import { NatsStreamingModule } from "@nx-micro-ecomm/server/nats-streaming";
 
 import { BullModule } from "../bull";
 import { OrderCreatedListenerService } from "../nats/listeners";
+import { ExpirationCompletePublisherService } from "../nats/publishers/expiration-complete-publisher.service";
 
 @Module({
   imports: [
@@ -38,6 +39,6 @@ import { OrderCreatedListenerService } from "../nats/listeners";
     }),
   ],
   controllers: [],
-  providers: [OrderCreatedListenerService],
+  providers: [OrderCreatedListenerService, ExpirationCompletePublisherService],
 })
 export class ExpirationModule {}

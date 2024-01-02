@@ -5,6 +5,7 @@ import { ConfigType } from "@nestjs/config";
 
 import { bullConfig } from "@nx-micro-ecomm/server/config";
 
+import { ExpirationCompletePublisherService } from "../nats/publishers/expiration-complete-publisher.service";
 import { InjectQueue, getBullQueueToken } from "./bull.constants";
 import type { BullQueue, Payload } from "./bull.interface";
 
@@ -25,11 +26,16 @@ import type { BullQueue, Payload } from "./bull.interface";
   exports: [getBullQueueToken()],
 })
 export class BullModule implements OnModuleInit {
-  constructor(@InjectQueue() private readonly queue: BullQueue) {}
+  constructor(
+    @InjectQueue() private readonly queue: BullQueue,
+    private readonly expirationCompletePublisher: ExpirationCompletePublisherService,
+  ) {}
 
   onModuleInit() {
     this.queue.process(async (job) => {
-      console.log("I am a worker", job.data.orderId);
+      this.expirationCompletePublisher.publish({
+        orderId: job.data.orderId,
+      });
     });
   }
 }
