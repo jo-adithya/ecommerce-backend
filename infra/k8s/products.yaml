@@ -16,13 +16,18 @@ spec:
         - name: products
           image: joadithya/ecomm-products
           env:
+            - name: PORT
+              value: "3000"
+            - name: MONGODB_URI
+              value: mongodb://products-mongo-svc:27017/products
+            - name: NATS_URL
+              value: http://nats-svc:4222
+            - name: NATS_CLUSTER_ID
+              value: ecomm
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-          envFrom:
-            - secretRef:
-                name: products-secret
 ---
 apiVersion: v1
 kind: Service

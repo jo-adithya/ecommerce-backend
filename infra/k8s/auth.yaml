@@ -15,6 +15,11 @@ spec:
       containers:
         - name: auth
           image: joadithya/ecomm-auth
+          env:
+            - name: PORT
+              value: "3000"
+            - name: MONGODB_URI
+              value: mongodb://auth-mongo-svc:27017/auth
           envFrom:
             - secretRef:
                 name: auth-secret

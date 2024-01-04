@@ -1,47 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: orders
+  name: payments-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: orders
+      app: payments
   template:
     metadata:
       labels:
-        app: orders
+        app: payments
     spec:
       containers:
-        - name: orders
-          image: joadithya/ecomm-orders
+        - name: payments
+          image: joadithya/ecomm-payments
           env:
             - name: PORT
               value: "3000"
-            - name: NATS_URL
-              value: http://nats-svc:4222
-            - name: NATS_CLUSTER_ID
-              value: ecomm
-            - name: EXPIRATION_WINDOW_SECONDS
-              value: "900"
             - name: NATS_CLIENT_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: NATS_CLUSTER_ID
+              value: ecomm
+            - name: NATS_URL
+              value: http://nats-svc:4222
           envFrom:
             - secretRef:
-                name: orders-secret
+                name: payments-secret
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: orders-svc
+  name: payments-svc
 spec:
-  type: ClusterIP
   selector:
-    app: orders
+    app: payments
+  type: ClusterIP
   ports:
-    - name: orders
+    - name: payments
       protocol: TCP
       port: 3000
       targetPort: 3000

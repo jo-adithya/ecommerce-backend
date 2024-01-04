@@ -19,8 +19,17 @@
         "webpackConfig": "apps/payments/webpack.config.js"
       },
       "configurations": {
-        "development": {},
-        "production": {}
+        "development": {
+          "buildLibsFromSrc": true,
+          "generatePackageJson": true
+        },
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "generatePackageJson": true,
+          "buildLibsFromSrc": true
+        }
       }
     },
     "serve": {

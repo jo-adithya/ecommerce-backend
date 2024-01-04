@@ -6,6 +6,8 @@ build:
       context: .
       docker:
         dockerfile: apps/auth/Dockerfile
+        buildArgs:
+          TARGET: development
       sync:
         manual:
           - src: 'apps/auth/src/**/*.ts'
@@ -16,6 +18,8 @@ build:
       context: .
       docker:
         dockerfile: apps/products/Dockerfile
+        buildArgs:
+          TARGET: development
       sync:
         manual:
           - src: 'apps/products/src/**/*.ts'
@@ -26,6 +30,8 @@ build:
       context: .
       docker:
         dockerfile: apps/orders/Dockerfile
+        buildArgs:
+          TARGET: development
       sync:
         manual:
           - src: 'apps/orders/src/**/*.ts'
@@ -36,9 +42,23 @@ build:
       context: .
       docker:
         dockerfile: apps/expiration/Dockerfile
+        buildArgs:
+          TARGET: production
       sync:
         manual:
           - src: 'apps/expiration/src/**/*.ts'
+            dest: .
+          - src: 'libs/server/**/*.ts'
+            dest: .
+    - image: joadithya/ecomm-payments
+      context: .
+      docker:
+        dockerfile: apps/payments/Dockerfile
+        buildArgs:
+          TARGET: development
+      sync:
+        manual:
+          - src: 'apps/payments/src/**/*.ts'
             dest: .
           - src: 'libs/server/**/*.ts'
             dest: .

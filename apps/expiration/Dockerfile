@@ -1,3 +1,5 @@
+ARG TARGET=production
+
 ######################
 # BASE STAGE
 ######################
@@ -27,6 +29,25 @@ COPY . .
 
 RUN pnpm build expiration
 
+######################
+# DEVELOPMENT STAGE
+######################
+
+FROM base As development
+
+WORKDIR /usr/src/app
+
+RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
+
+COPY --from=build --chown=node:node /usr/src/app/dist/apps/expiration/package.json ./
+COPY --from=build --chown=node:node /usr/src/app/dist/apps/expiration/pnpm-lock.yaml ./
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm install nx @nx/js @nx/webpack
+
+COPY . .
+
+CMD ["pnpm", "nx", "serve", "expiration"]
 
 ######################
 # PRODUCTION STAGE
@@ -47,3 +68,7 @@ RUN pnpm install
 RUN pnpm install tslib pino-pretty
 
 CMD ["node", "main.js"]
+
+######################
+
+FROM ${TARGET}

@@ -27,7 +27,8 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-RUN pnpm run build auth
+RUN pnpm build db-migrations
+RUN pnpm run build payments
 
 ######################
 # DEVELOPMENT STAGE
@@ -39,15 +40,15 @@ WORKDIR /usr/src/app
 
 RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 
-COPY --from=build --chown=node:node /usr/src/app/dist/apps/auth/package.json ./
-COPY --from=build --chown=node:node /usr/src/app/dist/apps/auth/pnpm-lock.yaml ./
+COPY --from=build --chown=node:node /usr/src/app/dist/apps/payments/package.json ./
+COPY --from=build --chown=node:node /usr/src/app/dist/apps/payments/pnpm-lock.yaml ./
 
 RUN pnpm install --frozen-lockfile
 RUN pnpm install nx @nx/js @nx/webpack
 
 COPY . .
 
-CMD ["pnpm", "nx", "serve", "auth"]
+CMD ["pnpm", "nx", "serve", "payments"]
 
 ######################
 # PRODUCTION STAGE
@@ -60,11 +61,12 @@ USER node
 WORKDIR /usr/src/app
 
 # Copy only the required files to the final container
-COPY --from=build --chown=node:node /usr/src/app/dist/apps/auth ./
+COPY --from=build --chown=node:node /usr/src/app/dist/apps/payments ./
+COPY --from=build --chown=node:node /usr/src/app/dist/libs/server/db-migrations/src/payments ./libs/server/db-migrations/src/payments
 
 ENV NODE_ENV=production
 
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 RUN pnpm install tslib pino-pretty
 
 CMD ["node", "main.js"]
