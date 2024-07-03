@@ -39,8 +39,8 @@ WORKDIR /usr/src/app
 
 RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 
-COPY --from=build --chown=node:node /usr/src/app/dist/apps/auth/package.json ./
-COPY --from=build --chown=node:node /usr/src/app/dist/apps/auth/pnpm-lock.yaml ./
+COPY --from=build --chown=node:node /usr/src/app/package.json ./
+COPY --from=build --chown=node:node /usr/src/app/pnpm-lock.yaml ./
 
 RUN pnpm install --frozen-lockfile
 RUN pnpm install nx @nx/js @nx/webpack

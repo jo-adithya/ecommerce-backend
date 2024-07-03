@@ -16,19 +16,16 @@
         "tsConfig": "apps/auth/tsconfig.app.json",
         "assets": ["apps/auth/src/assets"],
         "isolatedConfig": true,
-        "webpackConfig": "apps/auth/webpack.config.js",
-        "generatePackageJson": true
+        "webpackConfig": "apps/auth/webpack.config.js"
       },
       "configurations": {
         "development": {
-          "generatePackageJson": true,
           "buildLibsFromSrc": true
         },
         "production": {
           "optimization": true,
           "extractLicenses": true,
           "inspect": false,
-          "generatePackageJson": true,
           "buildLibsFromSrc": true
         }
       }

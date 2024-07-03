@@ -8,6 +8,11 @@
     "test": "nx test",
     "prepare": "husky install"
   },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^10.2.10",
